@@ -217,31 +217,27 @@ function Result = hit_triangle(AB, P0, P1, P2)
     elseif hit_line_segment(AB, [P2; P0]) == true
         Result = true;
     else
-        vector_01 = [ P1(1) - P0(1); P1(2) - P0(2); 0];
-        vector_12 = [ P2(1) - P1(1); P2(2) - P1(2); 0];
-        vector_20 = [ P0(1) - P2(1); P0(2) - P2(2); 0];
+        vec_0a_01 = (AB(1, 2) - P0(2)) * (P1(1) - P0(1)) + (AB(1, 1) - P0(1)) * (P1(2) - P0(2));
+        vec_1a_12 = (AB(1, 2) - P1(2)) * (P2(1) - P1(1)) + (AB(1, 1) - P1(1)) * (P2(2) - P1(2));
+        vec_2a_20 = (AB(1, 2) - P2(2)) * (P0(1) - P2(1)) + (AB(1, 1) - P2(1)) * (P0(2) - P2(2));
+    
+        vec_0b_01 = (AB(2, 2) - P0(2)) * (P1(1) - P0(1)) + (AB(2, 1) - P0(1)) * (P1(2) - P0(2));
+        vec_1b_12 = (AB(2, 2) - P1(2)) * (P2(1) - P1(1)) + (AB(2, 1) - P1(1)) * (P2(2) - P1(2));
+        vec_2b_20 = (AB(2, 2) - P2(2)) * (P0(1) - P2(1)) + (AB(2, 1) - P2(1)) * (P0(2) - P2(2));
 
         vector_0a = [ AB(1, 1) - P0(1); AB(1, 2) - P0(2); 0];
         vector_1a = [ AB(1, 1) - P1(1); AB(1, 2) - P1(2); 0];
         vector_2a = [ AB(1, 1) - P2(1); AB(1, 2) - P2(2); 0];
 
-        vector_0b = [ AB(2, 1) - P0(1); AB(2, 2) - P0(2); 0];
-        vector_1b = [ AB(2, 1) - P1(1); AB(2, 2) - P1(2); 0];
-        vector_2b = [ AB(2, 1) - P2(1); AB(2, 2) - P2(2); 0];
-
-        cross_0a_01 = cross(vector_0a, vector_01);
-        cross_1a_12 = cross(vector_1a, vector_12);
-        cross_2a_20 = cross(vector_2a, vector_20);
-
-        cross_0b_01 = cross(vector_0b, vector_01);
-        cross_1b_12 = cross(vector_1b, vector_12);
-        cross_2b_20 = cross(vector_2b, vector_20);
+        vector_01 = [ P1(1) - P0(1); P1(2) - P0(2); 0];
+        vector_12 = [ P1(1) - P0(1); P1(2) - P0(2); 0]
+        vector_01 = [ P1(1) - P0(1); P1(2) - P0(2); 0]
     
-        if ((cross_0a_01(3) > 0) && (cross_1a_12(3) > 0) && (cross_2a_20(3) > 0)) ...
-        || ((cross_0a_01(3) < 0) && (cross_1a_12(3) < 0) && (cross_2a_20(3) < 0))
+        if ((vec_0a_01 > 0) && (vec_1a_12 > 0) && (vec_2a_20 > 0)) ...
+        || ((vec_0a_01 < 0) && (vec_1a_12 < 0) && (vec_2a_20 < 0))
             Result = true;
-        elseif ((cross_0b_01(3) > 0) && (cross_1b_12(3) > 0) && (cross_2b_20(3) > 0)) ...
-            || ((cross_0b_01(3) < 0) && (cross_1b_12(3) < 0) && (cross_2b_20(3) < 0))
+        elseif ((vec_0b_01 > 0) && (vec_1b_12 > 0) && (vec_2b_20 > 0)) ...
+            || ((vec_0b_01 < 0) && (vec_1b_12 < 0) && (vec_2b_20 < 0))
             Result = true;
         end
     end
