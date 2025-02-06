@@ -16,9 +16,9 @@ axis square
 hold on
 
 obs(:,:,1) = [4 0; 20 10; 20 30; 60 30; 60 10];
-%obs(:,:,2) = [4 0; 70 10; 70 50; 90 50; 90 10];
-%obs(:,:,3) = [4 0; 10 40; 10 60; 50 60; 50 40];
-%obs(:,:,4) = [4 0; 20 70; 20 90; 80 90; 80 70];
+obs(:,:,2) = [4 0; 70 10; 70 50; 90 50; 90 10];
+obs(:,:,3) = [4 0; 10 40; 10 60; 50 60; 50 40];
+obs(:,:,4) = [4 0; 20 70; 20 90; 80 90; 80 70];
 
 plot_obstacles(obs)
 
@@ -28,8 +28,8 @@ circles(finish(1), finish(2), circleSize, 'facecolor', 'yellow')
 vertices = get_vertices(start, finish, obs);
 edges    = get_egdes(vertices);
 
-%edges = [ edges(1:5, :) ]; % debugging
-%plot_edges(edges, vertices);
+%edges = [ edges(1:25, :) ]; % debugging
+plot_edges(edges, vertices);
 
 edges    = clean_edges(edges, vertices, obs);
 
@@ -166,6 +166,7 @@ function Egdes = get_egdes(Vertices)
 end
 
 function Result = hit_line_segment(AB, CD)
+%[CD(1,:), CD(2,:)]
     Result = false;
 
     m_ab = (AB(1, 2) - AB(2, 2)) / (AB(1, 1) - AB(2, 1));
@@ -251,7 +252,7 @@ end
 function Result = hit_obstacles(AB, Obstacles)
     Result = false;
 
-    for i = 1:size(Obstacles(3))
+    for i = 1:size(Obstacles, 3)
         if hit_obstacle(AB, Obstacles(:, :, i)) == true
             Result = true;
             break
