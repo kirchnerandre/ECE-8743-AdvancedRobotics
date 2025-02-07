@@ -28,8 +28,8 @@ circles(finish(1), finish(2), circleSize, 'facecolor', 'yellow')
 vertices = get_vertices(start, finish, obs);
 edges    = get_egdes(vertices);
 
-edges = [ edges(128, :) ]; % debugging
-%plot_edges(edges, vertices);
+edges = [ edges(131, :) ]; % debugging
+plot_edges(edges, vertices);
 
 edges    = clean_edges(edges, vertices, obs);
 
