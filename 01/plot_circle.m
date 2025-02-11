@@ -1,4 +1,4 @@
-function [ h ] = circles(x,y,r,varargin)
+function [ h ] = plot_circle(x,y,r,varargin)
 % h = circles(x,y,r,varargin) plots circles of radius r at points x and y. 
 % x, y, and r can be scalars or N-D arrays.  
 % 
