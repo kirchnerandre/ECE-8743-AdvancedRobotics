@@ -24,23 +24,25 @@ obstacles3(:,:,7) = [4 0; 10 70; 10 90; 15 90; 15 70];
 obstacles3(:,:,8) = [4 0; 50 65; 50 90; 70 90; 70 65];
 obstacles3(:,:,9) = [4 0; 80 35; 80 75; 95 75; 95 35];
 
-figure(); axis([0 100 0 100]); axis square; hold on
+compute(vertex_initial, vertex_final, obstacles1)
+compute(vertex_initial, vertex_final, obstacles2)
+compute(vertex_initial, vertex_final, obstacles3)
+
+function compute(VertexInitial, VertexFinal, Obstacles)
+    tic
+
+    figure();
+    axis([0 100 0 100]);
+    axis square;
+    hold on
+
     plot_circle(VertexInitial(1), VertexInitial(2), 2, 'facecolor', 'green')
-   plot_circle(VertexFinal  (1), VertexFinal  (2), 2, 'facecolor', 'yellow')
-[ time distance ] = reduced_visibility_graph(vertex_initial, vertex_final, obstacles1);
-disp("Environment   = 1");
-disp("Time          = " + time);
-disp("Distance      = " + distance);
+    plot_circle(VertexFinal  (1), VertexFinal  (2), 2, 'facecolor', 'yellow')
 
-figure(); axis([0 100 0 100]); axis square; hold on
-[ time distance ] = reduced_visibility_graph(vertex_initial, vertex_final, obstacles2);
-disp("Environment   = 2");
-disp("Time          = " + time);
-disp("Distance      = " + distance);
+    plot_obstacles(Obstacles)
 
-figure(); axis([0 100 0 100]); axis square; hold on
-[ time distance ] = reduced_visibility_graph(vertex_initial, vertex_final, obstacles3);
-disp("Environment   = 3");
-disp("Time          = " + time);
-disp("Distance      = " + distance);
+    [ distance = reduced_visibility_graph(VertexInitial, VertexFinal, Obstacles);
 
+    disp("Time          = " + toc);
+    disp("Distance      = " + distance);
+end

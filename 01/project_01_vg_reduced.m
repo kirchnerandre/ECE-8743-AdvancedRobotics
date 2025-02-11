@@ -24,27 +24,30 @@ obstacles3(:,:,7) = [4 0; 10 70; 10 90; 15 90; 15 70];
 obstacles3(:,:,8) = [4 0; 50 65; 50 90; 70 90; 70 65];
 obstacles3(:,:,9) = [4 0; 80 35; 80 75; 95 75; 95 35];
 
-figure(); axis([0 100 0 100]); axis square; hold on
-plot_circle(vertex_initial(1), vertex_initial(2), 2, 'facecolor', 'green')
-plot_circle(vertex_final  (1), vertex_final  (2), 2, 'facecolor', 'yellow')
-[ time distance ] = reduced_visibility_graph(vertex_initial, vertex_final, obstacles1);
-disp("Environment   = 1");
-disp("Time          = " + time);
-disp("Distance      = " + distance);
+compute(vertex_initial, vertex_final, obstacles1)
+compute(vertex_initial, vertex_final, obstacles2)
+compute(vertex_initial, vertex_final, obstacles3)
 
-figure(); axis([0 100 0 100]); axis square; hold on
-plot_circle(vertex_initial(1), vertex_initial(2), 2, 'facecolor', 'green')
-plot_circle(vertex_final  (1), vertex_final  (2), 2, 'facecolor', 'yellow')
-[ time distance ] = reduced_visibility_graph(vertex_initial, vertex_final, obstacles2);
-disp("Environment   = 2");
-disp("Time          = " + time);
-disp("Distance      = " + distance);
+function compute(VertexInitial, VertexFinal, Obstacles)
+    tic
 
-figure(); axis([0 100 0 100]); axis square; hold on
-plot_circle(vertex_initial(1), vertex_initial(2), 2, 'facecolor', 'green')
-plot_circle(vertex_final  (1), vertex_final  (2), 2, 'facecolor', 'yellow')
-[ time distance ] = reduced_visibility_graph(vertex_initial, vertex_final, obstacles3);
-disp("Environment   = 3");
-disp("Time          = " + time);
-disp("Distance      = " + distance);
+    figure();
+    axis([0 100 0 100]);
+    axis square;
+    hold on
 
+    plot_circle(VertexInitial(1), VertexInitial(2), 2, 'facecolor', 'green')
+    plot_circle(VertexFinal  (1), VertexFinal  (2), 2, 'facecolor', 'yellow')
+
+    plot_obstacles(Obstacles)
+
+    [ distance path edges vertices ] = reduced_visibility_graph(VertexInitial, ...
+                                                                VertexFinal, ...
+                                                                Obstacles);
+
+    plot_edges(edges, vertices)
+    plot_path (path,  vertices)
+
+    disp("Distance      = " + distance);
+    disp("Time          = " + toc);
+end
