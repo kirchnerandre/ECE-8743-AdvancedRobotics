@@ -1,0 +1,27 @@
+function [ Time Distance ] = reduced_visibility_graph(VertexInitial, VertexFinal, Obstacles)
+    tic
+   
+    while changed = 
+    vertices    = get_vertices(VertexInitial, VertexFinal, Obstacles);
+    edges       = get_egdes(vertices, Obstacles);
+    
+    [ path distance ] = get_path(vertices, edges);
+
+    for i = 2:size(path, 2)
+        [ Obstacles changed ] = get_obstacles(vertices(path(i - 1), :), vertices(path(i), :), Obstacles);
+
+        if changed == true
+            break;
+        end
+    end
+
+   
+
+    plot_obstacles(Obstacles)
+    
+    plot_edges(edges, vertices)
+    
+    plot_path(path,  vertices)
+    
+    Time = toc;
+end

@@ -1,14 +1,6 @@
-function [ Time Distance ] = visable_graph(VertexInitial, VertexFinal, Obstacles)
+function [ Time Distance ] = visibility_graph(VertexInitial, VertexFinal, Obstacles)
     tic
 
-    figure()
-    axis([0 100 0 100])
-    axis square
-    hold on
-    
-    plot_circle(VertexInitial(1), VertexInitial(2), 2, 'facecolor', 'green')
-    plot_circle(VertexFinal  (1), VertexFinal  (2), 2, 'facecolor', 'yellow')
-    
     vertices    = get_vertices(VertexInitial, VertexFinal, Obstacles);
     edges       = get_egdes(vertices, Obstacles);
     

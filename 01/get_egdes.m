@@ -14,14 +14,16 @@ function Edges = get_egdes(Vertices, Obstacles)
             valid = true;
 
             for k = 1:size(Obstacles, 3)
-                [ in, on ] = inpolygon(points_x, ...
-                                       points_y, ...
-                                       Obstacles(2:end, 1, k), ...
-                                       Obstacles(2:end, 2, k));
-
-                if max(xor(in, on))
-                    valid = false;
-                    break
+                if Obstacles(1, 2, k) == 1
+                    [ in, on ] = inpolygon(points_x, ...
+                                           points_y, ...
+                                           Obstacles(2:end, 1, k), ...
+                                           Obstacles(2:end, 2, k));
+    
+                    if max(xor(in, on))
+                        valid = false;
+                        break
+                    end
                 end
             end
 
