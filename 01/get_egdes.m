@@ -1,5 +1,5 @@
 function Edges = get_egdes(Vertices, Obstacles)
-    edges_size  = factorial(size(Vertices, 1)) / factorial(size(Vertices, 1) - 2) / 2;
+    edges_size  = cast(factorial(size(Vertices, 1)) / factorial(size(Vertices, 1) - 2) / 2, 'uint32');
     Edges       = zeros(edges_size, 3);
     index       = 0;
 
@@ -17,8 +17,8 @@ function Edges = get_egdes(Vertices, Obstacles)
                 if Obstacles(1, 2, k) == 1
                     [ in, on ] = inpolygon(points_x, ...
                                            points_y, ...
-                                           Obstacles(2:end, 1, k), ...
-                                           Obstacles(2:end, 2, k));
+                                           Obstacles(2:(Obstacles(1, 1, k) + 1), 1, k), ...
+                                           Obstacles(2:(Obstacles(1, 1, k) + 1), 2, k));
     
                     if max(xor(in, on))
                         valid = false;

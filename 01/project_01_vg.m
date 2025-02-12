@@ -3,8 +3,8 @@ close all
 clear all
 clc
 
-%compute([   0  16 ], [   16    0 ], 'Map1.txt', -2,   18, -2,   18,  1)
-%compute([ 200 200 ], [ 1800 1800 ], 'Map2.txt',  0, 2000,  0, 2000, 20)
+compute([   0  16 ], [   16    0 ], 'Map1.txt', -2,   18, -2,   18,  1)
+compute([ 200 200 ], [ 1800 1800 ], 'Map2.txt',  0, 2000,  0, 2000, 20)
 compute([  10  10 ], [  180  180 ], 'Map3.txt',  0,  250,  0,  250, 10)
 
 function compute(VertexInitial, VertexFinal, File, XMin, XMax, YMin, YMax, Diameter)
