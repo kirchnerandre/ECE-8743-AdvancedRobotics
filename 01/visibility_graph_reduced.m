@@ -1,4 +1,4 @@
-function [ Distance Path Edges Vertices ] = reduced_visibility_graph(VertexInitial, VertexFinal, Obstacles)
+function [ Distance Path Edges Vertices ] = visibility_graph_reduced(VertexInitial, VertexFinal, Obstacles)
     changed = true;
    
     while changed == true
