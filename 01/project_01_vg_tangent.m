@@ -12,6 +12,10 @@ function compute(VertexInitial, VertexFinal, File, XMin, XMax, YMin, YMax, Diame
 
     tic
 
+    for i = 1:size(obstacles, 3)
+        obstacles(1, 2, i) = 1;
+    end
+
     figure();
     axis([XMin XMax YMin YMax]);
     axis square;
@@ -24,11 +28,7 @@ function compute(VertexInitial, VertexFinal, File, XMin, XMax, YMin, YMax, Diame
 
     [ distance path edges vertices ] = visibility_graph_tangent(VertexInitial,  ...
                                                                 VertexFinal,    ...
-                                                                obstacles,      ...
-                                                                XMin,           ...
-                                                                XMax,           ...
-                                                                YMin,           ...
-                                                                YMax);
+                                                                obstacles);
 
     plot_edges(edges, vertices)
     plot_path (path,  vertices)
