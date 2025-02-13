@@ -1,6 +1,6 @@
 function [ Distance Path Edges Vertices ] = visibility_graph_tangent(VertexInitial, VertexFinal, Obstacles)
-    Distance = 0;
-    Path = [];
+    Distance    = 0;
+    Path        = [];
 
     Vertices    = get_vertices(VertexInitial, VertexFinal, Obstacles);
     Edges       = [ get_tangents_all(Vertices, Obstacles); ...
