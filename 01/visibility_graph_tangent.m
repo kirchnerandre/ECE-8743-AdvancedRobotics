@@ -7,4 +7,6 @@ function [ Distance Path Edges Vertices ] = visibility_graph_tangent(VertexIniti
                     get_tangents_non(Vertices, Obstacles); ];
 
     Edges       = clean_edges(Edges, Vertices, Obstacles);
+
+    [ Path Distance ] = get_path(Vertices, Edges);
 end
