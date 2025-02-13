@@ -1,55 +1,78 @@
-function [ VerticesA VerticesB Distance ] = get_tangents(ObstacleA, ObstacleB)
-    VerticesA   = zeros(4, 1);
-    VerticesB   = zeros(4, 1);
-    Distance    = zeros(4, 1);
-    index       = 0;
+function [ VerticesA VerticesB ] = get_tangents(ObstacleA, ...
+                                                ObstacleB, ...
+                                                XMin, ...
+                                                XMax, ...
+                                                YMin, ...
+                                                YMax)
+    VerticesA = [];
+    VerticesB = [];
 
-    for i = 1:ObstacleA(1, 1)
-        for j = 1:ObstacleB(1, 1)
-            [ intersect_a intersect_b ] = test_edge(ObstacleA, ObstacleB, ObstacleA(i+1, :), ObstacleB(j+1, :));
+    for a = 1:ObstacleA(1, 1)
+        for b = 1:ObstacleB(1, 1)
+            m = (ObstacleA(a + 1, 2) - ObstacleB(b + 1, 2)) ...
+              / (ObstacleA(a + 1, 1) - ObstacleB(b + 1, 1));
 
-            if (intersect_a == false) && (intersect_b == false)
-                index = index + 1;
+            n =  ObstacleA(a + 1, 2) - ObstacleA(a + 1, 1) * m;
 
-                VerticesA(index) = i;
-                VerticesB(index) = j;
-                Distance (index) = sqrt((ObstacleA(i + 1, 1) - ObstacleB(i + 1, 1)) ^ 2 ...
-                                      + (ObstacleA(i + 1, 2) - ObstacleB(i + 1, 2)) ^ 2);
+            if ObstacleA(a + 1, 1) == ObstacleB(b + 1, 1)
+                point_1 = [ ObstacleA(a + 1, 1) YMin ];
+                point_2 = [ ObstacleB(b + 1, 1) YMax ];
+            elseif abs(m) > 1
+                point_1 = [ (YMin - n) / m      YMin ];
+                point_2 = [ (YMax - n) / m      YMax ];
+            else
+                point_1 = [ XMin                XMin * m + n ];
+                point_2 = [ XMax                XMax * m + n ];
+            end
+
+            points          = 4 * max(abs(point_1(1) - point_2(1)), ...
+                                      abs(point_1(2) - point_2(2)));
+
+            points_x        = linspace(point_1(1), point_2(1), points);
+            points_y        = linspace(point_1(2), point_2(2), points);
+
+            [ in_a, on_a ]  = inpolygon(points_x, ...
+                                        points_y, ...
+                                        ObstacleA(2:(ObstacleA(1, 1) + 1), 1), ...
+                                        ObstacleA(2:(ObstacleA(1, 1) + 1), 2));
+    
+            [ in_b, on_b ]  = inpolygon(points_x, ...
+                                        points_y, ...
+                                        ObstacleB(2:(ObstacleB(1, 1) + 1), 1), ...
+                                        ObstacleB(2:(ObstacleB(1, 1) + 1), 2));
+
+            if max(max(xor(in_a, on_a), xor(in_b, on_b))) == 0
+                m_new_num   = ObstacleA(a + 1, 2) - ObstacleB(b + 1, 2);
+                m_new_den   = ObstacleA(a + 1, 1) - ObstacleB(b + 1, 1);
+
+                n_new_num   = m_new_den * ObstacleA(a + 1, 2) ...
+                            - m_new_num * ObstacleA(a + 1, 1);
+                n_new_den   = m_new_den;
+
+                duplicated  = false;
+
+                for k = 1:size(VerticesA, 1)
+                    m_old_num   = VerticesA(k, 2) - VerticesB(k, 2);
+                    m_old_den   = VerticesA(k, 1) - VerticesB(k, 1);
+
+                    n_old_num   = m_old_den * VerticesA(k, 2) ...
+                                - m_old_num * VerticesA(k, 1);
+                    n_old_den   = m_old_den;
+
+                    if (m_new_num * m_old_den ==  m_old_num * m_new_den) ...
+                    && (n_new_num * n_old_den ==  n_old_num * n_new_den)
+                        duplicated = true;
+                        break;
+                    end
+                end
+
+                if duplicated == false
+                    plot(points_x, points_y)
+
+                    VerticesA = [ VerticesA; ObstacleA(a + 1, :) ];
+                    VerticesB = [ VerticesB; ObstacleB(b + 1, :) ];
+                end
             end
         end
-    end
-end
-
-function [ IntersectA IntersectB ] = test_edge(ObstacleA, ObstacleB, VertexA, VertexB)
-    m = (VertexA(2) - VertexB(2)) / (VertexA(1) - VertexB(1));
-    n =  VertexA(2) - VertexA(1) * m;
-
-    if m > 1
-        vertex_a = [ 0              n ];
-        vertex_b = [ 100            (100 * m + n)];
-    else
-        vertex_a = [ -n/m           0 ];
-        vertex_b = [  (100 - n)/m   100 ];
-    end
-
-    points = 4 * max(abs(vertex_a(1) - vertex_b(1)), abs(vertex_a(2) - vertex_b(2)));
-
-    points_x = linspace(vertex_a(1), vertex_b(1), points);
-    points_y = linspace(vertex_a(2), vertex_b(2), points);
-
-    [ in, on ] = inpolygon(points_x, points_y, ObstacleA(2:end, 1), ObstacleA(2:end, 2));
-    
-    if max(xor(in, on))
-        IntersectA = false;
-    else
-        IntersectA = true;
-    end
-
-    [ in, on ] = inpolygon(points_x, points_y, ObstacleB(2:end, 1), ObstacleB(2:end, 2));
-    
-    if max(xor(in, on))
-        IntersectB = false;
-    else
-        IntersectB = true;
     end
 end

@@ -10,11 +10,11 @@ compute([  10  10 ], [  180  180 ], 'Map3.txt',  0,  250,  0,  250, 10)
 function compute(VertexInitial, VertexFinal, File, XMin, XMax, YMin, YMax, Diameter)
     obstacles = load_obstacles(File);
 
+    tic
+
     for i = 1:size(obstacles, 3)
         obstacles(1, 2, i) = 1;
     end
-
-    tic
 
     figure();
     axis([XMin XMax YMin YMax]);
