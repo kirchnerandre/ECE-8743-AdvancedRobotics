@@ -1,4 +1,6 @@
-function [ Distance Path Edges Vertices ] = visibility_graph_reduced(VertexInitial, VertexFinal, Obstacles)
+function [ Distance Path Edges Vertices ] = visibility_graph_reduced(VertexInitial, ...
+                                                                     VertexFinal, ...
+                                                                     Obstacles)
     changed = true;
    
     while changed == true
@@ -8,7 +10,9 @@ function [ Distance Path Edges Vertices ] = visibility_graph_reduced(VertexIniti
         [ Path Distance ]   = get_path(Vertices, Edges);
     
         for i = 2:size(Path, 2)
-            [ Obstacles changed ] = get_obstacles(Vertices(Path(i - 1), :), Vertices(Path(i), :), Obstacles);
+            [ Obstacles changed ] = get_obstacles(Vertices(Path(i - 1), :), ...
+                                                  Vertices(Path(i    ), :), ...
+                                                  Obstacles);
     
             if changed == true
                 break;

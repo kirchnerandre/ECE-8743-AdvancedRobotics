@@ -24,11 +24,11 @@ function Edges = clean_edges(Edges, Vertices, Obstacles)
         end
 
         if collision == false
-            index           = index + 1;
-            edges(index, 1) = Edges(i, 1);
-            edges(index, 2) = Edges(i, 2);
-            edges(index, 3) = sqrt((Vertices(Edges(i, 1), 1) - Vertices(Edges(i, 2), 1)) ^ 2 ...
-                                 + (Vertices(Edges(i, 1), 2) - Vertices(Edges(i, 2), 2)) ^ 2);
+            index          = index + 1;
+            edges(index,1) = Edges(i,1);
+            edges(index,2) = Edges(i,2);
+            edges(index,3) = sqrt((Vertices(Edges(i,1),1) - Vertices(Edges(i,2),1))^2 ...
+                                + (Vertices(Edges(i,1),2) - Vertices(Edges(i,2),2))^2);
         end
     end
 
