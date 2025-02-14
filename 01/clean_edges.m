@@ -12,14 +12,16 @@ function Edges = clean_edges(Edges, Vertices, Obstacles)
         collision = false;
 
         for j = 1:size(Obstacles, 3)
-            [ in, on ]  = inpolygon(points_x, ...
-                                    points_y, ...
-                                    Obstacles(2:(Obstacles(1, 1, j) + 1), 1, j), ...
-                                    Obstacles(2:(Obstacles(1, 1, j) + 1), 2, j));
+            if Obstacles(1, 2, j) == 1
+                [ in, on ]  = inpolygon(points_x, ...
+                                        points_y, ...
+                                        Obstacles(2:(Obstacles(1, 1, j) + 1), 1, j), ...
+                                        Obstacles(2:(Obstacles(1, 1, j) + 1), 2, j));
 
-            if max(xor(in, on)) == 1
-                collision = true;
-                break
+                if max(xor(in, on)) == 1
+                    collision = true;
+                    break
+                end
             end
         end
 

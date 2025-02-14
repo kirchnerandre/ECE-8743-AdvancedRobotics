@@ -29,6 +29,7 @@ function compute(VertexInitial, VertexFinal, File, XMin, XMax, YMin, YMax, Diame
     plot_edges(edges, vertices)
     plot_path (path,  vertices)
 
+    disp("Edges         = " + size(edges, 1));
     disp("Distance      = " + distance);
     disp("Time          = " + toc);
 end
