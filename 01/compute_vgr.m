@@ -1,6 +1,8 @@
-function [ Distance Path Edges Vertices ] = visibility_graph_reduced(VertexInitial, ...
-                                                                     VertexFinal, ...
-                                                                     Obstacles)
+function [ Time Distance Path Edges Vertices ] = compute_rvg(VertexInitial, ...
+                                                             VertexFinal, ...
+                                                             Obstacles)
+    tic
+
     changed = true;
    
     while changed == true
@@ -20,4 +22,6 @@ function [ Distance Path Edges Vertices ] = visibility_graph_reduced(VertexIniti
             end
         end
     end
+
+    Time = toc;
 end
