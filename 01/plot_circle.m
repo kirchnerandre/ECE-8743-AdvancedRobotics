@@ -114,13 +114,16 @@ assert(isnumeric(y),'Input y must be numeric.')
 assert(isnumeric(r),'Input r must be numeric.') 
 
 if ~isscalar(x) && ~isscalar(y)
-    assert(numel(x)==numel(y),'If neither x nor y is a scalar, their dimensions must match.')
+    assert(numel(x)==numel(y), ...
+           'If neither x nor y is a scalar, their dimensions must match.')
 end
 if ~isscalar(x) && ~isscalar(r)
-    assert(numel(x)==numel(r),'If neither x nor r is a scalar, their dimensions must match.')
+    assert(numel(x)==numel(r), ...
+           'If neither x nor r is a scalar, their dimensions must match.')
 end
 if ~isscalar(r) && ~isscalar(y)
-    assert(numel(r)==numel(y),'If neither y nor r is a scalar, their dimensions must match.')
+    assert(numel(r)==numel(y), ...
+           'If neither y nor r is a scalar, their dimensions must match.')
 end
 
 %% Parse inputs: 
@@ -194,7 +197,10 @@ h = NaN(size(x));
 
 % Plot circles singly: 
 for n = 1:numcircles
-    h(n) = fill(x(n)+r(n).*cos(t+rotation(n)), y(n)+r(n).*sin(t+rotation(n)),'',varargin{:});
+    h(n) = fill(x(n)+r(n).*cos(t+rotation(n)), ...
+                y(n)+r(n).*sin(t+rotation(n)), ...
+                '', ...
+                varargin{:});
 end
 
 % Return to original hold state: 

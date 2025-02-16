@@ -1,4 +1,8 @@
-function [ Distance Path Edges Vertices ] = visibility_graph_tangent(VertexInitial, VertexFinal, Obstacles)
+function [ Time Distance Path Edges Vertices ] = compute_vgt(VertexInitial, ...
+                                                             VertexFinal, ...
+                                                             Obstacles)
+    tic
+
     Distance    = 0;
     Path        = [];
 
@@ -9,4 +13,6 @@ function [ Distance Path Edges Vertices ] = visibility_graph_tangent(VertexIniti
     Edges       = clean_edges(Edges, Vertices, Obstacles);
 
     [ Path Distance ] = get_path(Vertices, Edges);
+
+    Time = toc;
 end

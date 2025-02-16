@@ -36,9 +36,9 @@ function Edges = get_tangents_non(Vertices, Obstacles)
             index               = index + 1;
 
             if j ~= 1
-                Edges(index, :) = [ (j + offset - 1)    (j + offset)                    0 ];
+                Edges(index, :) = [ (j + offset - 1) (j + offset)                  0 ];
             else
-                Edges(index, :) = [ (1 + offset)        (Obstacles(1, 1, i) + offset)   0 ];
+                Edges(index, :) = [ (1 + offset)     (Obstacles(1, 1, i) + offset) 0 ];
             end
         end
 

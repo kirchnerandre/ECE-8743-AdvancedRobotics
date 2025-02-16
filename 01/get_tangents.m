@@ -88,8 +88,10 @@ function Edges = get_tangents(ObstacleA, ObstacleB)
                 duplicated  = false;
 
                 for k = 1:index
-                    m_old_num   = ObstacleA(Edges(k, 1) + 1, 2) - ObstacleB(Edges(k, 2) + 1, 2);
-                    m_old_den   = ObstacleA(Edges(k, 1) + 1, 1) - ObstacleB(Edges(k, 2) + 1, 1);
+                    m_old_num   = ObstacleA(Edges(k, 1) + 1, 2) ...
+                                - ObstacleB(Edges(k, 2) + 1, 2);
+                    m_old_den   = ObstacleA(Edges(k, 1) + 1, 1) ...
+                                - ObstacleB(Edges(k, 2) + 1, 1);
 
                     n_old_num   = m_old_den * ObstacleA(Edges(k, 1) + 1, 2) ...
                                 - m_old_num * ObstacleA(Edges(k, 1) + 1, 1);

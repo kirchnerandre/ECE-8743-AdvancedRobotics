@@ -1,5 +1,13 @@
 function Vertices = get_vertices(VertexInitial, VertexFinal, Obstacles)
-    Vertices            = zeros(sum(Obstacles(1, 1, :)) + 2, 2);
+    length              = 0;
+
+    for i = 1:size(Obstacles, 3)
+        if Obstacles(1, 2, i) == 1
+            length = length + Obstacles(1, 1, i);
+        end
+    end
+
+    Vertices            = zeros(length, 2);
     index               = 1;
     Vertices(index, :)  = VertexInitial;
     
