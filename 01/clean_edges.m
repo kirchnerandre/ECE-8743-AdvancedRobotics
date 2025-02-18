@@ -1,4 +1,30 @@
 function Edges = clean_edges(Edges, Vertices, Obstacles)
+    %
+    % Discards edges that collide with any polynomial.
+    %
+    % clean_edges(EDGES, VERTICES, OBSTACLES)
+    %    SIZE  = get_size(EDGES)
+    %    CLEAN = allocate_memory(SIZE)
+    %    INDEX = 0
+    %
+    %    EDGE in { EDGES }
+    %    COORDINATES_X = { EDGE.VERTEX_INITIAL.X, ..., EDGE.VERTEX_FINAL.X }
+    %    COORDINATES_Y = { EDGE.VERTEX_INITIAL.Y, ..., EDGE.VERTEX_FINAL.Y }
+    %
+    %    COLLISION = false
+    %
+    %    OBSTACLE in { OBSTACLES }
+    %        if (COORDINATES_X and OBSTACLE collide) or (COORDINATES_Y and OBSTACLE collide)
+    %           COLLISION = true
+    %
+    %    if COLLISION is false
+	%        EDGE.LENGTH  = calculate_length(EDGE.VERTEX_INITIAL, EDGE.VERTEX_FINAL)
+    %        INDEX        = INDEX + 1
+    %   	 CLEAN(INDEX) = EDGE
+    %
+    %    return CLEAN(1:INDEX)
+    %
+
     edges = zeros(size(Edges));
     index = 0;
 

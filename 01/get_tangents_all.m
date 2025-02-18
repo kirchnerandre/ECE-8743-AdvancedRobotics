@@ -1,4 +1,25 @@
 function Edges = get_tangents_all(Vertices, Obstacles)
+    %
+    % Return the list of all tangent edges between all pair of obstacles
+    %
+    % get_tangents_all(OBSTACLES)
+    %     SIZE  = calculate_tangents_size(OBSTACLES)
+    %     EDGES = allocate_memory(SIZE)
+    %     INDEX = 0
+    %
+    %     INDEX_A = { 1, ..., get_size(OBSTACLES) }
+    %         INDEX_B = { (INDEX_A + 1), ..., get_size(OBSTACLES) }
+    %             INDEX            = INDEX + 4
+    %             TANGENTS         = get_tangents(OBSTACLES(INDEX_A),
+    %                                             OBSTACLES(INDEX_B))
+    %             EDGES(INDEX - 3) = TANGENTS(1)
+    %             EDGES(INDEX - 2) = TANGENTS(2)
+    %             EDGES(INDEX - 1) = TANGENTS(3)
+    %             EDGES(INDEX - 0) = TANGENTS(4)
+    %
+    %      return EDGES
+    %
+
     obstacles_size  = size(Obstacles, 3);
     tangents_size   = 4 * factorial(obstacles_size) / factorial(obstacles_size - 2) / 2;
     Edges           = zeros(cast(tangents_size, 'uint32'), 3);

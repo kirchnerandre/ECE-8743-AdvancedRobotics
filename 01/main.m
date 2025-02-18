@@ -1,4 +1,3 @@
-
 close all
 clear all
 clc
@@ -12,6 +11,11 @@ disp('Map 3')
 compute([  10  10 ], [  180  180 ], 'Map3.txt', [  0,  250,  0,  250 ], 10)
 
 function compute(VertexInitial, VertexFinal, File, Axis, Diameter)
+    %
+    % Executes all 3 versions of the Visibility Graph algorithm, and
+    % outputs their data to be compared
+    %
+
     obstacles = load_obstacles(File);
 
     for i = 1:size(obstacles, 3)

@@ -1,5 +1,11 @@
 function Vertices = get_vertices(VertexInitial, VertexFinal, Obstacles)
-    length              = 0;
+    %
+    % Return a list of vertices where the first vertex is the initial
+    % vertex, the last vertex is the final vertex, and the vertices between
+    % are the vertices of only the flagged obstacles
+    %
+
+    length = 0;
 
     for i = 1:size(Obstacles, 3)
         if Obstacles(1, 2, i) == 1

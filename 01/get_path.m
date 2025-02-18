@@ -1,4 +1,30 @@
 function [ Path Distance ] = get_path(Vertices, Edges)
+    %
+    % Uses the Vertices and Edges to create a Matlab graph that is used to
+    % compute the shortest path between the first and last vertex of
+    % Vertices
+    %
+    % get_path(VERTICES, EDGES)
+    %     SOURCES = allocate_memory(2 * get_size(EDGES))
+    %     TARGETS = allocate_memory(2 * get_size(EDGES))
+    %     LENGTH  = allocate_memory(2 * get_size(EDGES))
+    %
+    %     INDEX = { 1, ...., get_size(EDGES) }
+    %         SOURCES(2 * INDEX - 1) = EDGES(INDEX).VERTEX_INITIAL
+    %         TARGETS(2 * INDEX - 1) = EDGES(INDEX).VERTEX_FINAL
+    %         LENGTH (2 * INDEX - 1) = EDGES(INDEX).LENGTH
+    %
+    %         SOURCES(2 * INDEX - 0) = EDGES(INDEX).VERTEX_FINAL
+    %         TARGETS(2 * INDEX - 0) = EDGES(INDEX).VERTEX_INITIAL
+    %         LENGTH (2 * INDEX - 0) = EDGES(INDEX).LENGTH
+    %
+    %     GRAPH = build_graph(SOURCES, TARGETS, LENGTH)
+    % 
+    %     PATH  = calculate_path(GRAPH)
+    % 
+    %     return PATH
+    %
+
     Path        = [];
     Distance    = 0;
 
