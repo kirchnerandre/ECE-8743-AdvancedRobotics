@@ -1,4 +1,44 @@
 function Edges = get_tangents(ObstacleA, ObstacleB)
+    %
+    % Computes 4 tangent edges between ObstacleA and ObstacleB
+    %
+    % get_tangents(OBSTACLE_A, OBSTACLE_B)
+    %     EDGES   = [ 4 ]
+    %     INDEXES = 0
+    %
+    %     X_MIN    = get_smallest_x(OBSTACLE_A.VERTICES, OBSTACLE_B.VERTICES)
+    %     X_MAX    = get_biggest__x(OBSTACLE_A.VERTICES, OBSTACLE_B.VERTICES)
+    %     Y_MIN    = get_smallest_y(OBSTACLE_A.VERTICES, OBSTACLE_B.VERTICES)
+    %     Y_MAX    = get_biggest__y(OBSTACLE_A.VERTICES. OBSTACLE_B.VERTICES)
+    %
+    %     VERTEX_A = { OBSTACLE_A.VERTICES }
+    %         VERTEX_B = { OBSTACLE_B.VERTICES }
+    %             M = calculate_edge_slope(VERTEX_A, VERTEX_B)
+    %             N = calculate_edge_value(VERTEX_A, VERTEX_B, M)
+    %
+    %             COORDINATES_X = get_coordinates_within( X_MIN, X_MAX, M, N )
+    %             COORDINATES_Y = get_coordinates_within( Y_MIN, Y_MAX, M, N )
+    %
+    %             COLLISION = false
+    %
+    %             if (COORDINATES_X and OBSTACLE_A collide)
+    %             or (COORDINATES_Y and OBSTACLE_A collide)
+    %             or (COORDINATES_X and OBSTACLE_A collide)
+    %             or (COORDINATES_Y and OBSTACLE_A collide)
+    %                 COLLISION = true
+    %
+    %             if COLLISION == false
+    %                 INDEX = { INDEXES }
+    %                     if (EDGES(INDEX).M == M) and (EDGES(INDEX).N == N)
+    %                         COLLISION = true
+    % 
+    %             if COLLISION == false
+    %                 INDEXES        = INDEXES + 1
+    %                 EDGES(INDEXES) = { VERTEX_A VERTEX_B }
+    %
+    %     return EDGES
+    %
+
     Edges = zeros(4, 3);
     index = 0;
 
