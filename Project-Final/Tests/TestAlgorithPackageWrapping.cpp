@@ -49,15 +49,15 @@ bool test_1()
                                         { -20,  20 } };
 
     VERTICES_T vestices_expected    = { { -20, -20 },
-                                        {  20, -20 },
+                                        { -20,  20 },
                                         {  20,  20 },
-                                        { -20,  20 } };
+                                        {  20, -20 } };
 
-    VERTICES_T vestices_output;
+    VERTICES_T vertices_output;
 
-    AlgorithPackageWrapping::compute(vestices_output, vestices_input);
+    AlgorithPackageWrapping::compute(vertices_output, vestices_input);
 
-    if (!compare_vertices(vestices_output, vestices_expected))
+    if (!compare_vertices(vertices_output, vestices_expected))
     {
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
         return false;
