@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 
-#include "../Headers/AlgorithPackageWrapping.h"
+#include "AlgorithPackageWrapping.h"
 
 
 bool compare_vertices(VERTEX_T& VertexA, VERTEX_T& VertexB)

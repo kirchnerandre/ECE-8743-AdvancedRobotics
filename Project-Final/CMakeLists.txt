@@ -1,5 +1,6 @@
 
-set (PROJECT_NAME "ProjectFinal")
+set (PROJECT_NAME       "ProjectFinal")
+set (PROJECT_BASEDIR    ${CMAKE_CURRENT_SOURCE_DIR})
 
 cmake_minimum_required(VERSION 3.10)
 

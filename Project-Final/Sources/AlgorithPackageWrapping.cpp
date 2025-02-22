@@ -1,5 +1,5 @@
 
-#include "../Headers/Types.h"
+#include "Types.h"
 
 namespace AlgorithPackageWrapping
 {
