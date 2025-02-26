@@ -8,7 +8,7 @@ global LEN_STEP
 global PT_START
 global PT_GOAL
 
-SENSOR_RANGE    = 0.50;
+SENSOR_RANGE    = 0.75;
 LEN_STEP        = 0.01;
 PT_START        = [ 3; 3 ];
 PT_GOAL         = [ 5; 6 ];
@@ -39,7 +39,9 @@ mode = 0;   % mode = 0, do motion-to-goal
             % mode = 1, do boundary-following
 
 while true
-    curve = compute_curve(obstacles, PT_GOAL, SENSOR_RANGE);
+    radar_data = compute_radar(obstacles_data, pt_current, SENSOR_RANGE);
+
+    plot_data_2(PT_GOAL, pt_current, radar_data, SENSOR_RANGE);
 
     robot_plot = plot(pt_current(1), ...
                       pt_current(2), ...
