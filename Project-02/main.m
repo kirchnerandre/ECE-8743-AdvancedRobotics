@@ -1,72 +1,66 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%   TANGENTBUG.M
-%   ECE8743 Advanced Robotics
-%   Date:   Spring 2024
-%   Description:    Implement TangentBug path planning algorithm.
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
 
-%%  Global variables
-global SENSOR_RANGE     % Sensing range of the range sensor
-global LEN_STEP         % Step length of a movement of the robot
-global PT_START         % Start point coordinates
-global PT_GOAL          % Goal point coordinates
+close all
+clear all
+clc
 
-SENSOR_RANGE = 0.5;
-LEN_STEP = 0.01;
-[PT_START,PT_GOAL] = inputstartend();
-left_bottom = [min(PT_START(1),PT_GOAL(1));min(PT_START(2),PT_GOAL(2))];
-right_top = [max(PT_START(1),PT_GOAL(1));max(PT_START(2),PT_GOAL(2))];
+global SENSOR_RANGE
+global LEN_STEP
+global PT_START
+global PT_GOAL
 
-disp(['Start from: (',num2str(PT_START(1)),',',num2str(PT_START(2)),')']);
-disp(['Go to: (',num2str(PT_GOAL(1)),',',num2str(PT_GOAL(2)),')']);
-close
-h = figure('units','normalized','outerposition',[0 0 1 1]);
-plot(PT_START(1),PT_START(2),'r+',"LineWidth",2,"MarkerSize",5); hold on
-plot(PT_GOAL(1),PT_GOAL(2),'r*',"LineWidth",2,"MarkerSize",5); hold on
-title(['Step length: ',num2str(LEN_STEP),...
-    ';  Sensor range: ',num2str(SENSOR_RANGE)]);
+SENSOR_RANGE    = 0.50;
+LEN_STEP        = 0.01;
+PT_START        = [ 3; 3 ];
+PT_GOAL         = [ 5; 6 ];
 
-%%  Create obstacles in the plane
-[obstacles,obs_1,obs_2,obs_3] = createobstacles(PT_START,PT_GOAL);
-plot(PT_START(1),PT_START(2),'r+',"LineWidth",2,"MarkerSize",5); hold on
-plot(PT_GOAL(1),PT_GOAL(2),'r*',"LineWidth",2,"MarkerSize",5); hold on
-plot(obs_1(1,:),obs_1(2,:),'k'); hold on
-plot(obs_2(1,:),obs_2(2,:),'k'); hold on
-plot(obs_3(1,:),obs_3(2,:),'k'); hold on
+left_bottom = [min(PT_START(1), PT_GOAL(1)) min(PT_START(2), PT_GOAL(2))];
+right_top   = [max(PT_START(1), PT_GOAL(1)) max(PT_START(2), PT_GOAL(2))];
+
+[ obstacles_data, obstacles_length ] = create_obstacles(PT_START, PT_GOAL);
+
+figure('units', 'normalized', 'outerposition', [0 0 1 1])
+hold on
+axis([left_bottom(1) right_top(1) left_bottom(2) right_top(2)]);
+axis equal
+
+plot_data_1(PT_START, PT_GOAL, obstacles_data, obstacles_length)
 
 tic
-%%  Main loop
-%   motion-to-goal & boundary-following
-x_path = [];                        % Record of path's x
-y_path = [];                        % Record of path's y
-x_path = [x_path PT_START(1)];      % Start point stored
-y_path = [y_path PT_START(2)];      % 
 
-pt_current = PT_START;
+x_path = [];
+y_path = [];
+x_path = [x_path PT_START(1)];
+y_path = [y_path PT_START(2)];
+
+pt_current  = PT_START;
 pt_previous = pt_current;
 
 mode = 0;   % mode = 0, do motion-to-goal
             % mode = 1, do boundary-following
 
 while true
-    robot_plot = plot(pt_current(1),pt_current(2),...   % Current location
-        'bo',...                                        % Blue o
-        "LineWidth",2,...                               %
-        "MarkerSize",5); hold on                        %
-    path_plot = plot(x_path,y_path,'b'); hold on        % Path experienced
-    current_goal_plot = line([pt_current(1) PT_GOAL(1)],...
-        [pt_current(2) PT_GOAL(2)],...                  % Current-goal line
-        'Color','green','LineStyle','--');              %
-    circle_plot = drawcircle(pt_current,...             % Sensor range
-        SENSOR_RANGE); hold on
+    curve = compute_curve(obstacles, PT_GOAL, SENSOR_RANGE);
+
+    robot_plot = plot(pt_current(1), ...
+                      pt_current(2), ...
+                      'bo', ...
+                      "LineWidth",  2, ...
+                      "MarkerSize", 5)
+
+    path_plot = plot(x_path, ...
+                     y_path, ...
+                     'b');
+
+    current_goal_plot = line([pt_current(1) PT_GOAL(1)], ...
+                             [pt_current(2) PT_GOAL(2)], ...
+                             'Color',     'green', ...
+                             'LineStyle', '--');
+
+    circle_plot = drawcircle(pt_current, SENSOR_RANGE)
     
-    [isExist,curve,endpoints] = getcurve(obstacles,...  % Scan with sensor to get
-        pt_current,...                          % the intersecting curve
-        PT_GOAL,SENSOR_RANGE);                  % and indicate endpoints
-    
+    figure
+    plot_data(pt_current, PT_GOAL, curve)
+
     if ~isExist             % No blocking obstacle
         pt_dest = PT_GOAL;  % Drive towards goal point
     else                    % Existing blocking obstacle
@@ -77,8 +71,6 @@ while true
         pt_dest = decideOi(pt_current,...   % Drive towards Oi
             PT_GOAL,endpoints);             %
     end
-    axis([left_bottom(1) right_top(1) left_bottom(2) right_top(2)]);
-    axis equal
     
 %     disp(['Go to endpoint: (',...
 %             num2str(pt_dest(1)),',',num2str(pt_dest(2)),')']);
@@ -96,9 +88,9 @@ while true
         end
     else
         %%  boundary-following   
-        [pt_current,angle_next] = boundaryfollow2next(...    
+        [pt_current,angle_next] = follow_boundary(...    
             angle_previous,...                  % Follow the most recent
-            pt_current,pt_dest,LEN_STEP,obstacles); % direction. Initially
+            pt_current,pt_dest,LEN_STEP,obstacles) % direction. Initially
                                                 % from motion-to-goal
         angle_previous = angle_next;            %
                                                 % 
