@@ -11,8 +11,8 @@ function RadarData = compute_radar(Obstacles, PositionCurrent, SensorRange)
 
         index       = mod(round(angle / step), steps) + 1;
 
-        distance    = norm(Obstacles(2, i) - PositionCurrent(2), ...
-                           Obstacles(1, i) - PositionCurrent(1));
+        distance    = sqrt((Obstacles(2, i) - PositionCurrent(2)) ^ 2 ...
+                         + (Obstacles(1, i) - PositionCurrent(1)) ^ 2);
 
         if (distance < RadarData(index)) && (distance < SensorRange)
             RadarData(index) = distance;
