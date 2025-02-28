@@ -50,13 +50,14 @@ function [ PositionMiddle PositionBegin ] = compute_step(PositionBegin, Position
                                                  + (PositionBegin(2) - PositionFinal(2)) ^ 2);
 
                 if (distance_new < distance)
-                    distance        = distance_new;
-                    PositionBegin   = [cos(angles(l) * pi / 180) * StepSize + PositionBegin(1); ...
-                                       sin(angles(l) * pi / 180) * StepSize + PositionBegin(2)];
-            
-                    PositionMiddle  = PositionBegin;
+                    distance            = distance_new;
+                    PositionCandidate   = [cos(angles(l) * pi / 180) * StepSize + PositionBegin(1); ...
+                                           sin(angles(l) * pi / 180) * StepSize + PositionBegin(2)];
                 end
             end
         end
+
+        PositionMiddle  = PositionCandidate;
+        PositionBegin   = PositionCandidate;
     end
 end
