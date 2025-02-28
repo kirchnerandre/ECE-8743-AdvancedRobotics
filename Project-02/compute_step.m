@@ -20,31 +20,32 @@ function [ PositionMiddle PositionBegin ] = compute_step(PositionBegin, Position
             end
         end
 
-        index_first = -1;
-        index_last  = -1;
-        indexes     = zeros(1, steps);
-    
-        for j = 1:steps
-            k = mod(i + j, steps) + 1
+        state   = false;
+        indexes = zeros(1, steps);
 
-            if RadarData(k) ~= Inf && index_first == -1
-                indexes(k) = 1;
+        for j = 1:steps
+            k = mod(i + j - 1, steps) + 1;
+
+            if RadarData(k) ~= Inf && state == false
+                indexes(k)  = 1;
+                state       = true;
             end
     
-            if RadarData(k) == Inf && index_last == -1
-                indexes(k - 1) = 1;
-            end
-   
-            if index_first ~= -1 && index_last ~= -1
-                index_first = -1;
-                index_last  = -1;
+            if RadarData(k) == Inf && state == true
+                if k == 1
+                    indexes(steps)  = 1;
+                else
+                    indexes(k - 1)  = 1;
+                end
+
+                state = false;
             end
         end
 
         distance = Inf;
 
         for l = 1:steps
-            if indexes(i) == 1
+            if indexes(l) == 1
                 distance_new = RadarData(l) + sqrt((PositionBegin(1) - PositionFinal(1)) ^ 2 ...
                                                  + (PositionBegin(2) - PositionFinal(2)) ^ 2);
 
