@@ -1,12 +1,11 @@
-function [ PositionMiddle PositionBegin ] = compute_step(PositionBegin, PositionFinal, RadarData, StepSize)
-    step    = 0.5;
-    angles  = 0:step:(360 - step);
+function [ PositionMiddle PositionBegin ] = compute_step(PositionBegin, PositionFinal, RadarData, SensorAngle, StepSize)
+    angles  = 0:SensorAngle:(360 - SensorAngle);
     steps   = size(angles, 2);
 
     angle   = atan2(PositionFinal(2) - PositionBegin(2), ...
                     PositionFinal(1) - PositionBegin(1)) * 180 / pi;
 
-    index   = mod(round(angle / step), steps) + 1;
+    index   = mod(round(angle / SensorAngle), steps) + 1;
 
     if RadarData(index) == Inf
         PositionBegin   = [cos(angle * pi / 180) * StepSize + PositionBegin(1); ...

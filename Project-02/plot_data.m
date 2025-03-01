@@ -29,7 +29,7 @@ function plot_data(PositionBegin, PositionIntermediate, PositionFinal, Obstacles
          "LineWidth",  2, ...
          "MarkerSize", 5)
 
-    step    = 0.5;
+    step    = 1.0;
     angles  = (0:step:(360 - step)) .* pi / 180;
     steps   = size(angles, 2);
 
@@ -53,7 +53,7 @@ function plot_data(PositionBegin, PositionIntermediate, PositionFinal, Obstacles
         if index_first ~= -1 && index_last ~= -1
                 plot(RadarData(index_first:index_last) .* cos(angles(index_first:index_last)) + PositionBegin(1), ...
                      RadarData(index_first:index_last) .* sin(angles(index_first:index_last)) + PositionBegin(2), ...
-                     'Color', 'red')
+                     'Color', 'red', "LineWidth", 5)
 
             index_first = -1;
             index_last  = -1;
