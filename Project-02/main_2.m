@@ -7,8 +7,9 @@ sensor_range    = 0.5;
 sensor_angle    = 2.0;
 sensor_error    = 5;
 position_begin  = [ 3.00; 3.00 ];
-position_middle = position_begin;
 position_final  = [ 5.00; 6.00 ];
+
+position_middle = position_begin;
 left_bottom     = [min(position_begin(1), position_final(1)) ...
                    min(position_begin(2), position_final(2))];
 right_top       = [max(position_begin(1), position_final(1)) ...
@@ -49,7 +50,13 @@ while true
     distance = sqrt((position_final(1) - position_begin(1)) ^ 2 ...
                   + (position_final(2) - position_begin(2)) ^ 2);
 
-    plot_data(position_begin, position_middle, position_final, obstacles_data, obstacles_length, radar_data, sensor_range, sensor_angle)
+    plot_robot(position_begin)
+
+    plot_path(position_begin, position_middle, position_final)
+
+    plot_radar_range(position_begin, radar_data, sensor_range, sensor_angle)
+
+    plot_radar_detection(position_begin, radar_data, sensor_angle)
 
     if distance < step_size
         break

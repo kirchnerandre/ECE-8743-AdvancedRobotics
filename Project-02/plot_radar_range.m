@@ -1,0 +1,14 @@
+function plot_radar_range(PositionBegin, RadarData, SensorRange, SensorAngle)
+    persistent radar_range
+
+    if ~isempty(radar_range)
+        delete(radar_range)
+    end
+
+    angles  = (0:SensorAngle:(360 - SensorAngle)) .* pi / 180;
+
+    x       = SensorRange * cos(angles) + PositionBegin(1);
+    y       = SensorRange * sin(angles) + PositionBegin(2);
+
+    radar_range = plot(x, y, 'm');
+end
