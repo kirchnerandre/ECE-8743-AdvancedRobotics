@@ -1,4 +1,4 @@
-function plot_data(PositionBegin, PositionIntermediate, PositionFinal, ObstaclesData, ObstaclesLength, RadarData, SensorRange)
+function plot_data(PositionBegin, PositionIntermediate, PositionFinal, ObstaclesData, ObstaclesLength, RadarData, SensorRange, SensorAngle)
     plot(PositionBegin(1), PositionBegin(2), 'r+', "LineWidth", 2, "MarkerSize", 5)
     plot(PositionFinal(1), PositionFinal(2), 'r*', "LineWidth", 2, "MarkerSize", 5)
 
@@ -29,8 +29,7 @@ function plot_data(PositionBegin, PositionIntermediate, PositionFinal, Obstacles
          "LineWidth",  2, ...
          "MarkerSize", 5)
 
-    step    = 1.0;
-    angles  = (0:step:(360 - step)) .* pi / 180;
+    angles  = (0:SensorAngle:(360 - SensorAngle)) .* pi / 180;
     steps   = size(angles, 2);
 
     x       = SensorRange * cos(angles) + PositionBegin(1);
@@ -46,7 +45,7 @@ function plot_data(PositionBegin, PositionIntermediate, PositionFinal, Obstacles
             index_first = i;
         end
 
-        if RadarData(i) == Inf && index_last == -1
+        if RadarData(i) == Inf && index_first ~= -1 && index_last == -1
             index_last = i - 1;
         end
 

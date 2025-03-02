@@ -8,7 +8,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-function [ ObstaclesData ObstaclesLength ] = create_obstacles(PositionStart, PositionDestiny)
+function [ ObstaclesData ObstaclesLength MaxDistance ] = create_obstacles(PositionStart, PositionDestiny)
+    MaxDistance = 0;
     n           = 100;
     width       = abs(PositionDestiny(1) - PositionStart(1));
     height      = abs(PositionDestiny(2) - PositionStart(2));
@@ -62,5 +63,31 @@ function [ ObstaclesData ObstaclesLength ] = create_obstacles(PositionStart, Pos
     ObstaclesData   = [obs_1 obs_2 obs_3];
 
     ObstaclesLength = [ size(obs_1, 2) size(obs_2, 2) size(obs_3, 2) ];
+
+    MaxDistance     = max(get_max_distance(side_1),  MaxDistance);
+    MaxDistance     = max(get_max_distance(side_2),  MaxDistance);
+    MaxDistance     = max(get_max_distance(side_3),  MaxDistance);
+    MaxDistance     = max(get_max_distance(side_5),  MaxDistance);
+    MaxDistance     = max(get_max_distance(side_6),  MaxDistance);
+    MaxDistance     = max(get_max_distance(side_7),  MaxDistance);
+    MaxDistance     = max(get_max_distance(side_8),  MaxDistance);
+    MaxDistance     = max(get_max_distance(side_9),  MaxDistance);
+    MaxDistance     = max(get_max_distance(side_10), MaxDistance);
+    MaxDistance     = max(get_max_distance(side_11), MaxDistance);
+    MaxDistance     = max(get_max_distance(side_12), MaxDistance);
+    MaxDistance     = max(get_max_distance(side_13), MaxDistance);
+    MaxDistance     = max(get_max_distance(side_14), MaxDistance);
+    MaxDistance     = max(get_max_distance(side_15), MaxDistance);
 end
 
+function MaxDistance = get_max_distance(Side)
+    a           = Side(:, 1);
+    b           = Side(:, end);
+    ab          = sqrt((a(1) - b(1)) ^ 2 + (a(2) - b(2)) ^ 2);
+
+    if size(Side, 2) > 1
+        MaxDistance = ab / (size(Side, 2) - 1);
+    else
+        MaxDistance = 0;
+    end
+end

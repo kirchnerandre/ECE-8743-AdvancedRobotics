@@ -6,7 +6,7 @@ function RadarDataNew = fix_radar(RadarDataOld, SensorAngle, SensorError)
     for i = 1:steps
         distance = Inf;
 
-        for j = -2:2
+        for j = -floor(SensorError / 2):floor(SensorError / 2)
             k = mod(i + j - 1, steps) + 1;
 
             if RadarDataOld(k) < distance
