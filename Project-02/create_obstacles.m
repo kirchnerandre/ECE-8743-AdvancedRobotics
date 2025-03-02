@@ -78,6 +78,15 @@ function [ ObstaclesData ObstaclesLength MaxDistance ] = create_obstacles(Positi
     MaxDistance     = max(get_max_distance(side_13), MaxDistance);
     MaxDistance     = max(get_max_distance(side_14), MaxDistance);
     MaxDistance     = max(get_max_distance(side_15), MaxDistance);
+
+
+
+%    ObstaclesData   = side_1(:, 1:n-1);
+
+%    ObstaclesLength = [ size(ObstaclesData, 2) ];
+
+%    MaxDistance     = max(get_max_distance(side_1),  0);
+
 end
 
 function MaxDistance = get_max_distance(Side)

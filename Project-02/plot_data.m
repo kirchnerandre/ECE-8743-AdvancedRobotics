@@ -1,10 +1,7 @@
 function plot_data(PositionBegin, PositionIntermediate, PositionFinal, ObstaclesData, ObstaclesLength, RadarData, SensorRange, SensorAngle)
-    plot_obstacles(ObstaclesData, ObstaclesLength)
+    plot_radar_range(PositionBegin, RadarData, SensorRange, SensorAngle)
 
-    plot_radar(PositionBegin, RadarData, SensorRange, SensorAngle)
-
-    plot(PositionBegin(1), PositionBegin(2), 'r+', "LineWidth", 2, "MarkerSize", 5)
-    plot(PositionFinal(1), PositionFinal(2), 'r*', "LineWidth", 2, "MarkerSize", 5)
+    plot_radar_detection(PositionBegin, RadarData, SensorAngle)
 
     line([PositionBegin(1) PositionIntermediate(1)], ...
          [PositionBegin(2) PositionIntermediate(2)], ...
@@ -23,39 +20,32 @@ function plot_data(PositionBegin, PositionIntermediate, PositionFinal, Obstacles
          "MarkerSize", 5)
 end
 
+function plot_radar_range(PositionBegin, RadarData, SensorRange, SensorAngle)
+    persistent radar_range
 
-function plot_obstacles(ObstaclesData, ObstaclesLength)
-    persistent status
-
-    if isempty(status)
-        status      = 1;
-        index_first = 1;
-    
-        for i = 1:size(ObstaclesLength, 2)
-            index_last = index_first + ObstaclesLength(i) - 1;
-        
-            plot(ObstaclesData(1, index_first:index_last), ...
-                 ObstaclesData(2, index_first:index_last))
-    
-            index_first = index_last + 1;
-        end
-    end
-end
-
-function plot_radar(PositionBegin, RadarData, SensorRange, SensorAngle)
-    persistent component_circle
-
-    if ~isempty(component_circle)
-        delete(component_circle)
+    if ~isempty(radar_range)
+        delete(radar_range)
     end
 
     angles  = (0:SensorAngle:(360 - SensorAngle)) .* pi / 180;
-    steps   = size(angles, 2);
 
     x       = SensorRange * cos(angles) + PositionBegin(1);
     y       = SensorRange * sin(angles) + PositionBegin(2);
 
-    component_circle = plot(x, y, 'm');
+    radar_range = plot(x, y, 'm');
+end
+
+function plot_radar_detection(PositionBegin, RadarData, SensorAngle)
+    persistent radar_detection
+
+    if ~isempty(radar_detection)
+        for i = 1:size(radar_detection, 2)
+            delete(radar_detection(i))
+        end
+    end
+
+    angles      = (0:SensorAngle:(360 - SensorAngle)) .* pi / 180;
+    steps       = size(angles, 2);
 
     index_first = -1;
     index_last  = -1;
@@ -70,12 +60,14 @@ function plot_radar(PositionBegin, RadarData, SensorRange, SensorAngle)
         end
 
         if index_first ~= -1 && index_last ~= -1
-%                plot(RadarData(index_first:index_last) .* cos(angles(index_first:index_last)) + PositionBegin(1), ...
-%                     RadarData(index_first:index_last) .* sin(angles(index_first:index_last)) + PositionBegin(2), ...
-%                     'Color', 'red', "LineWidth", 5)
+            radar_detection_new = plot(RadarData(index_first:index_last) .* cos(angles(index_first:index_last)) + PositionBegin(1), ...
+                                       RadarData(index_first:index_last) .* sin(angles(index_first:index_last)) + PositionBegin(2), ...
+                                       'Color', 'red', "LineWidth", 5)
 
             index_first = -1;
             index_last  = -1;
+
+            radar_detection     = [ radar_detection radar_detection_new ];
         end
     end
 end

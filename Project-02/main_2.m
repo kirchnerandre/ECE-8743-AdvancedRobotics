@@ -19,21 +19,37 @@ right_top       = [max(position_begin(1), position_final(1)) ...
 
 assert(sensor_angle > 180 / pi * asin(max_distance / 2 / sensor_range), 'Invalid sensor_angle');
 
-
-figure('units', 'normalized', 'outerposition', [0 0 1 1])
-hold on
-axis([left_bottom(1) right_top(1) left_bottom(2) right_top(2)]);
+figure;
+axis([ left_bottom(1) - sensor_range, right_top(1) + sensor_range, ...
+       left_bottom(2) - sensor_range, right_top(2) + sensor_range ]);
 axis equal
+set(gca,'XLimMode','manual');
+set(gca,'YLimMode','manual');
+hold on
+
+plot_obstacles(obstacles_data, obstacles_length);
+
+plot(position_begin(1), position_begin(2), 'r+', "LineWidth", 2, "MarkerSize", 5)
+plot(position_final(1), position_final(2), 'r*', "LineWidth", 2, "MarkerSize", 5)
+
+aaa = 0;
 
 while true
-    radar_data = compute_radar(obstacles_data, position_begin, sensor_range, sensor_angle);
 
-    plot_data(position_begin, position_middle, position_final, obstacles_data, obstacles_length, radar_data, sensor_range, sensor_angle)
+    aaa = aaa + 1;
+    if aaa == 57
+        aaa
+    end
+
+
+    radar_data = compute_radar(obstacles_data, position_begin, sensor_range, sensor_angle);
 
     [ position_middle position_begin ] = compute_step(position_begin, position_final, radar_data, sensor_angle, step_size);
 
     distance = sqrt((position_final(1) - position_begin(1)) ^ 2 ...
                   + (position_final(2) - position_begin(2)) ^ 2);
+
+    plot_data(position_begin, position_middle, position_final, obstacles_data, obstacles_length, radar_data, sensor_range, sensor_angle)
 
     if distance < step_size
         break
