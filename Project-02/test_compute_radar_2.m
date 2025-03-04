@@ -28,8 +28,8 @@ radar_range     = 0.5;
 % test 5
 obstacle_data   = [linspace(0.0, 10.0, n); linspace(1.0, 1.0, n)];
 
-position_5      = [ 5.0, 0.8 ];
-radar_data_5    = compute_radar_3(obstacle_data, n, position_5, radar_range);
+position_5      = [ 5.0; 0.8 ];
+radar_data_5    = compute_obstacles(obstacle_data, n, position_5, radar_range);
 
 plot_data(obstacle_data, n, position_5, radar_data_5, radar_range);
 

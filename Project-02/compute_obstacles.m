@@ -1,0 +1,77 @@
+function RadarData = compute_obstacles(ObstaclesData, ...
+                                       ObstaclesLength, ...
+                                       PositionCurrent, ...
+                                       SensorRange)
+
+    index_first = 1;
+
+    for i = 1:size(ObstaclesLength, 2)
+        index_last = index_first - 1 + ObstaclesLength(i);
+
+        RadarData = compute_obstacle(ObstaclesData(:, index_first:index_last), ...
+                                     PositionCurrent, ...
+                                     SensorRange);
+
+        index_first = index_first + ObstaclesLength(i);
+    end
+end
+
+function RadarData = compute_obstacle(ObstaclesData, ...
+                                      PositionCurrent, ...
+                                      SensorRange)
+    angles                  = 1:360;
+    RadarData               = Inf(1, size(angles, 2));
+
+    obstacle_angles    = atan2(ObstaclesData(2, :) - PositionCurrent(2), ...
+                               ObstaclesData(1, :) - PositionCurrent(1)) .* 180 ./ pi;
+
+    for i = 1:size(obstacle_angles, 2)
+        index_first = i;
+        index_last  = mod(i, size(obstacle_angles, 2)) + 1;
+[obstacle_angles(index_first) obstacle_angles(index_last)]
+        if fix(obstacle_angles(index_first)) ~= fix(obstacle_angles(index_last))
+
+
+            for j = floor(obstacle_angles(index_first)):ceil(obstacle_angles(index_last))
+                distance = compute_distance(ObstaclesData(:, index_first), ...
+                                            ObstaclesData(:, index_last), ...
+                                            PositionCurrent, ...
+                                            j);
+
+                if distance < SensorRange && SensorRange < RadarData(j)
+                    RadarData(j) = distance;
+                end
+            end
+        end
+    end
+end
+
+function Distance = compute_distance(PointA, PointB, PointO, Angle)
+    m_oz    = tan(Angle * pi / 180);
+
+    n_oz    =  PointO(2) - PointO(1) * m_oz;
+
+    m_ab    = (PointA(2) - PointB(2)) / (PointA(1) - PointB(1));
+
+    n_ab    =  PointA(2) - PointA(1) * m_ab;
+
+    if PointA(1) == PointB(1) && mod(Angle, 180) == 90
+        x = PointA(1);
+
+        y = min(PointA(2), PointB(2));
+    elseif PointA(1) == PointB(1)
+        x = PointA(1);
+
+        y = x * m_oz + n_oz;
+    elseif mod(Angle, 180) == 90
+        x = PointO(1);
+
+        y = x * m_ab + n_ab;
+    else
+        x = - (n_oz - n_ab) / (m_oz - m_ab);
+
+        y = x * m_oz + n_oz;
+    end
+
+    Distance = sqrt((x - PointO(1)) ^ 2 + (y - PointO(2)) ^ 2);
+end
