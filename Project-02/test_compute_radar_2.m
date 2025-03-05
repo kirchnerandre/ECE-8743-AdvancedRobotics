@@ -95,7 +95,7 @@ function [ ObstaclesData ObstaclesLength ] = build_obstacles_4()
 end
 
 function [ ObstaclesData ObstaclesLength ] = build_obstacles_5()
-    side_1          = [linspace(5.2, 5.2, 5); linspace(0.5, 1.5, 5)];
+    side_1          = [linspace(5.2, 5.2, 5); linspace(0.0, 2.0, 5)];
     ObstaclesData   = [side_1];
     ObstaclesLength = size(ObstaclesData, 2);
 end
