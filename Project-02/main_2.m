@@ -2,7 +2,7 @@ close all
 clear all
 clc
 
-clearance       = 10;
+clearance       = 20;
 step_size       = 0.01;
 sensor_range    = 0.5;
 sensor_angle    = 1.0;
@@ -36,9 +36,9 @@ step = 0;
 
 while true
 
-    step = step + 1;
+    step = step + 1
 
-    if step == 15
+    if step == 71
         step;
     end
 

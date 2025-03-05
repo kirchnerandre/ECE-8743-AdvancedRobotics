@@ -2,13 +2,14 @@ close all
 clear all
 clc
 
-test_1()
-test_2()
-test_3()
-test_4()
-test_5()
-test_6()
-test_7()
+%test_1()
+%test_2()
+%test_3()
+%test_4()
+%test_5()
+%test_6()
+%test_7()
+test_8()
 
 function test_1()
     radar_range = 0.5;
@@ -79,7 +80,17 @@ end
 function test_7()
     radar_range = 0.5;
     position    = [ 3.4967; 3.3869 ];
-%   position    = [ 3.5067; 3.3869 ];
+
+    [ obstacles_data obstacles_length ] = build_obstacles_7();
+
+    radar_data = compute_radar(obstacles_data, obstacles_length, position, radar_range);
+
+    plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range, [ 2 4 3 4 ]);
+end
+
+function test_8()
+    radar_range = 0.5;
+    position    = [ 3.7536; 3.3969 ];
 
     [ obstacles_data obstacles_length ] = build_obstacles_7();
 
