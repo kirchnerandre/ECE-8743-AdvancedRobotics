@@ -2,11 +2,12 @@ close all
 clear all
 clc
 
-%test_1()
-%test_2()
-%test_3()
-%test_4()
+test_1()
+test_2()
+test_3()
+test_4()
 test_5()
+test_6()
 
 function test_1()
     radar_range = 0.5;
@@ -57,6 +58,17 @@ function test_5()
     position    = [ 5.0; 0.8 ];
 
     [ obstacles_data obstacles_length ] = build_obstacles_5();
+
+    radar_data = compute_obstacles(obstacles_data, obstacles_length, position, radar_range);
+
+    plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range);
+end
+
+function test_6()
+    radar_range = 0.5;
+    position    = [ 5.0; 0.8 ];
+
+    [ obstacles_data obstacles_length ] = build_obstacles_6();
 
     radar_data = compute_obstacles(obstacles_data, obstacles_length, position, radar_range);
 
@@ -117,14 +129,13 @@ function plot_data(ObstaclesData, ...
                    RadarData, ...
                    RadarRange)
     clf
-    plot_obstacles(ObstaclesData, ObstaclesLength)
-
     hold on
     axis([ 0 10 0 2 ]);
     axis equal
     set(gca,'XLimMode','manual');
     set(gca,'YLimMode','manual');
 
+    plot_obstacles(ObstaclesData, ObstaclesLength)
     plot_robot(Position)
     plot_radar_range(Position, RadarRange, 1)
     plot_radar_detection(Position, RadarData, 1)

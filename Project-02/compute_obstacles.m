@@ -4,13 +4,15 @@ function RadarData = compute_obstacles(ObstaclesData, ...
                                        SensorRange)
 
     index_first = 1;
+    RadarData   = Inf(1, 360);
 
     for i = 1:size(ObstaclesLength, 2)
         index_last = index_first - 1 + ObstaclesLength(i);
 
         RadarData = compute_obstacle(ObstaclesData(:, index_first:index_last), ...
                                      PositionCurrent, ...
-                                     SensorRange);
+                                     SensorRange, ...
+                                     RadarData);
 
         index_first = index_first + ObstaclesLength(i);
     end
@@ -18,12 +20,11 @@ end
 
 function RadarData = compute_obstacle(ObstaclesData, ...
                                       PositionCurrent, ...
-                                      SensorRange)
-    angles                  = 1:360;
-    RadarData               = Inf(1, size(angles, 2));
-
-    obstacle_angles    = atan2(ObstaclesData(2, :) - PositionCurrent(2), ...
-                               ObstaclesData(1, :) - PositionCurrent(1)) .* 180 ./ pi;
+                                      SensorRange, ...
+                                      RadarData)
+    angles          = 1:360;
+    obstacle_angles = atan2(ObstaclesData(2, :) - PositionCurrent(2), ...
+                            ObstaclesData(1, :) - PositionCurrent(1)) .* 180 ./ pi;
 
     for i = 1:size(obstacle_angles, 2)
         index_first = i;
