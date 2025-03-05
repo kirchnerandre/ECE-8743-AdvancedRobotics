@@ -28,17 +28,21 @@ function RadarData = compute_obstacle(ObstaclesData, ...
     for i = 1:size(obstacle_angles, 2)
         index_first = i;
         index_last  = mod(i, size(obstacle_angles, 2)) + 1;
-[obstacle_angles(index_first) obstacle_angles(index_last)]
+
         if fix(obstacle_angles(index_first)) ~= fix(obstacle_angles(index_last))
+            angle_min = floor(min(fix(obstacle_angles(index_first)), ...
+                              fix(obstacle_angles(index_last))));
 
+            angle_max = ceil (max(fix(obstacle_angles(index_first)), ...
+                              fix(obstacle_angles(index_last))));
 
-            for j = floor(obstacle_angles(index_first)):ceil(obstacle_angles(index_last))
+            for j = angle_min:angle_max
                 distance = compute_distance(ObstaclesData(:, index_first), ...
                                             ObstaclesData(:, index_last), ...
                                             PositionCurrent, ...
                                             j);
 
-                if distance < SensorRange && SensorRange < RadarData(j)
+                if distance < SensorRange && distance < RadarData(j)
                     RadarData(j) = distance;
                 end
             end
