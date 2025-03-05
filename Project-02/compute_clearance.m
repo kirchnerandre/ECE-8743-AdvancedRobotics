@@ -16,17 +16,24 @@ function RadarData = compute_clearance(RadarData, Clearance)
         distance = RadarData(i);
 
         if radar_status(i) == 1
-            j = 1:+1:Clearance;
-        elseif radar_status(i) == 2
-            j = Clearance:-1:1;
-        end
+            a = mod(360 + i,                 360) + 1
+            b = mod(360 + i + Clearance - 1, 360) + 1
 
-        if radar_status(i) ~= 0
-            k = mod(360 + i + j - 1, 360) + 1;
-    
-            if RadarData(k) == Inf
-                RadarData(k) = distance;
+            for k = a:b
+                if RadarData(k) == Inf
+                    RadarData(k) = distance;
+                end
+            end
+        elseif radar_status(i) == 2
+            a = mod(360 + i - 1 - Clearance, 360) + 1
+            b = mod(360 + i - 2,             360) + 1
+
+            for k = a:b
+                if RadarData(k) == Inf
+                    RadarData(k) = distance;
+                end
             end
         end
     end
 end
+
