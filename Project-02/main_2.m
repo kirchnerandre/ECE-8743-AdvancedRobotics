@@ -2,6 +2,7 @@ close all
 clear all
 clc
 
+clearance       = 10;
 step_size       = 0.01;
 sensor_range    = 0.5;
 sensor_angle    = 1.0;
@@ -31,18 +32,19 @@ plot_obstacles(obstacles_data, obstacles_length);
 plot(position_begin(1), position_begin(2), 'r+', "LineWidth", 2, "MarkerSize", 5)
 plot(position_final(1), position_final(2), 'r*', "LineWidth", 2, "MarkerSize", 5)
 
-aaa = 0;
+step = 0;
 
 while true
 
-    aaa = aaa + 1;
-    if aaa == 53
-        aaa
+    step = step + 1;
+
+    if step == 15
+        step;
     end
 
-%   radar_data = compute_radar(obstacles_data, position_begin, sensor_range, sensor_angle);
+    radar_data = compute_radar(obstacles_data, obstacles_length, position_begin, sensor_range);
 
-    radar_data = compute_radar_2(obstacles_data, obstacles_length, position_begin, sensor_range);
+    radar_data = compute_clearance(radar_data, clearance);
 
     [ position_middle position_begin ] = compute_step(position_begin, ...
                                                       position_final, ...
@@ -50,16 +52,16 @@ while true
                                                       sensor_angle, ...
                                                       step_size);
 
-    distance = sqrt((position_final(1) - position_begin(1)) ^ 2 ...
-                  + (position_final(2) - position_begin(2)) ^ 2);
-
     plot_robot(position_begin)
 
     plot_path(position_begin, position_middle, position_final)
 
-    plot_radar_range(position_begin, radar_data, sensor_range, sensor_angle)
+    plot_radar_range(position_begin, sensor_range, sensor_angle)
 
     plot_radar_detection(position_begin, radar_data, sensor_angle)
+
+    distance = sqrt((position_final(1) - position_begin(1)) ^ 2 ...
+                  + (position_final(2) - position_begin(2)) ^ 2);
 
     if distance < step_size
         break
