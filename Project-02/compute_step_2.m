@@ -8,8 +8,8 @@ function [ PositionMiddle PositionBegin ] = compute_step_2(PositionBegin, Positi
     end
 
     if RadarData(angle_direct) == Inf
-        PositionBegin   = PositionBegin + StepSize * [ sin(angle_direct * pi / 180); ...
-                                                       cos(angle_direct * pi / 180) ];
+        PositionBegin   = PositionBegin + StepSize * [ cos(angle_direct * pi / 180); ...
+                                                       sin(angle_direct * pi / 180) ];
 
         PositionMiddle  = PositionBegin;
     else

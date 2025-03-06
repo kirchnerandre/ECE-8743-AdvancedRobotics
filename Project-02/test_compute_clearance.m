@@ -2,9 +2,9 @@ close all
 clear all
 clc
 
-%test_7()
-%test_9()
-%test_10()
+test_7()
+test_9()
+test_10()
 test_11()
 
 function test_7()
@@ -64,11 +64,9 @@ function test_11()
 
     radar_data = compute_radar(obstacles_data, obstacles_length, position, radar_range);
 
+    radar_data = compute_clearance(radar_data, clearance);
+
     plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range, [ 3.0 4.5 3.0 4.5 ]);
-
-%   radar_data = compute_clearance(radar_data, clearance);
-
-%   plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range, [ 3.0 4.5 3.0 4.5 ]);
 end
 
 function [ ObstaclesData ObstaclesLength ] = build_obstacles_7()
