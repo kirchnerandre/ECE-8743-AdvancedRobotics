@@ -29,29 +29,22 @@ function RadarData = compute_obstacle(ObstaclesData, ...
         index_first = i;
         index_last  = mod(i, size(obstacle_angles, 2)) + 1;
 
-        if fix(obstacle_angles(index_first)) ~= fix(obstacle_angles(index_last))
-            angle_min = ceil (min(mod(360 + obstacle_angles(index_first), 360), ...
-                                  mod(360 + obstacle_angles(index_last ), 360)));
+        angle_min = ceil (min(mod(360 + obstacle_angles(index_first), 360), ...
+                              mod(360 + obstacle_angles(index_last ), 360)));
 
-            angle_max = floor(max(mod(360 + obstacle_angles(index_first), 360), ...
-                                  mod(360 + obstacle_angles(index_last ), 360)));
+        angle_max = floor(max(mod(360 + obstacle_angles(index_first), 360), ...
+                              mod(360 + obstacle_angles(index_last ), 360)));
 
-            for j = angle_min:angle_max
-                angle       = mod(j + 360 - 1, 360) + 1;
+        for j = angle_min:angle_max
+            angle       = mod(j + 360 - 1, 360) + 1;
 
-if angle == 49
-    [obstacle_angles(index_first) obstacle_angles(index_last) angle_min angle_max]
-    angle;
-end
+            distance    = compute_distance(ObstaclesData(:, index_first), ...
+                                           ObstaclesData(:, index_last), ...
+                                           PositionCurrent, ...
+                                           angle);
 
-                distance    = compute_distance(ObstaclesData(:, index_first), ...
-                                               ObstaclesData(:, index_last), ...
-                                               PositionCurrent, ...
-                                               angle);
-
-                if distance < SensorRange && distance < RadarData(angle)
-                    RadarData(angle) = distance;
-                end
+            if distance < SensorRange && distance < RadarData(angle)
+                RadarData(angle) = distance;
             end
         end
     end
