@@ -38,4 +38,3 @@ function RadarData = compute_clearance(RadarData, Clearance)
         end
     end
 end
-

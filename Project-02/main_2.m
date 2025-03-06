@@ -5,7 +5,6 @@ clc
 clearance       = 20;
 step_size       = 0.01;
 sensor_range    = 0.5;
-sensor_angle    = 1.0;
 sensor_error    = 5;
 position_begin  = [ 3.00; 3.00 ];
 position_final  = [ 5.00; 6.00 ];
@@ -46,19 +45,18 @@ while true
 
     radar_data = compute_clearance(radar_data, clearance);
 
-    [ position_middle position_begin ] = compute_step(position_begin, ...
-                                                      position_final, ...
-                                                      radar_data, ...
-                                                      sensor_angle, ...
-                                                      step_size);
+    [ position_middle position_begin ] = compute_step_2(position_begin, ...
+                                                        position_final, ...
+                                                        radar_data, ...
+                                                        step_size);
 
     plot_robot(position_begin)
 
     plot_path(position_begin, position_middle, position_final)
 
-    plot_radar_range(position_begin, sensor_range, sensor_angle)
+    plot_radar_range(position_begin, sensor_range, 1.0)
 
-    plot_radar_detection(position_begin, radar_data, sensor_angle)
+    plot_radar_detection(position_begin, radar_data, 1.0)
 
     distance = sqrt((position_final(1) - position_begin(1)) ^ 2 ...
                   + (position_final(2) - position_begin(2)) ^ 2);
