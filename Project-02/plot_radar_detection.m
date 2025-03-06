@@ -3,7 +3,7 @@ function plot_radar_detection(PositionBegin, RadarData, SensorAngle)
 
     if ~isempty(radar_detection)
         for i = 1:size(radar_detection, 2)
-%           delete(radar_detection(i))
+            delete(radar_detection(i))
         end
     end
 

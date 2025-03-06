@@ -3,7 +3,8 @@ clear all
 clc
 
 %test_7()
-test_9()
+%test_9()
+test_10()
 
 function test_7()
     clearance   = 20;
@@ -25,6 +26,22 @@ function test_9()
     clearance   = 20;
     radar_range = 0.5;
     position    = [ 3.6170; 3.5450 ];
+
+    [ obstacles_data obstacles_length ] = build_obstacles_7();
+
+    radar_data = compute_radar(obstacles_data, obstacles_length, position, radar_range);
+
+    plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range, [ 3.0 4.5 3.0 4.5 ]);
+
+    radar_data = compute_clearance(radar_data, clearance);
+
+    plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range, [ 3.0 4.5 3.0 4.5 ]);
+end
+
+function test_10()
+    clearance   = 20;
+    radar_range = 0.5;
+    position    = [ 3.5365; 3.3480 ];
 
     [ obstacles_data obstacles_length ] = build_obstacles_9();
 
