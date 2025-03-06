@@ -37,7 +37,7 @@ while true
 
     step = step + 1;
 
-    if step == 13
+    if step == 75
         step;
     end
 

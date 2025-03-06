@@ -2,15 +2,17 @@ close all
 clear all
 clc
 
-%test_1()
-%test_2()
-%test_3()
-%test_4()
-%test_5()
-%test_6()
-%test_7()
-%test_8()
+test_1()
+test_2()
+test_3()
+test_4()
+test_5()
+test_6()
+test_7()
+test_8()
 test_9()
+test_10()
+test_11()
 
 function test_1()
     radar_range = 0.5;
@@ -111,6 +113,28 @@ function test_9()
     plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range, [ 3.0 4.5 3.0 4.5 ]);
 end
 
+function test_10()
+    radar_range = 0.5;
+    position    = [ 3.6165; 3.3914 ];
+
+    [ obstacles_data obstacles_length ] = build_obstacles_9();
+
+    radar_data = compute_radar(obstacles_data, obstacles_length, position, radar_range);
+
+    plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range, [ 3.0 4.5 3.0 4.5 ]);
+end
+
+function test_11()
+    radar_range = 0.5;
+    position    = [ 3.6170; 3.5450 ];
+
+    [ obstacles_data obstacles_length ] = build_obstacles_8();
+
+    radar_data = compute_radar(obstacles_data, obstacles_length, position, radar_range);
+
+    plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range, [ 3.0 4.5 3.0 4.5 ]);
+end
+
 function [ ObstaclesData ObstaclesLength ] = build_obstacles_1()
     side_1          = [linspace(0.0, 10.0, 50); linspace(1.0, 1.0, 50)];
     ObstaclesData   = [side_1];
@@ -144,6 +168,7 @@ end
 
 function [ ObstaclesData ObstaclesLength ] = build_obstacles_5()
     side_1          = [linspace(5.2, 5.2, 5); linspace(0.0, 2.0, 5)];
+%   side_2          = [linspace(5.2, 5.2, 1); linspace(2.0, 0.0, 1)];
     ObstaclesData   = [side_1];
     ObstaclesLength = size(ObstaclesData, 2);
 end
@@ -179,6 +204,28 @@ function [ ObstaclesData ObstaclesLength ] = build_obstacles_7()
     ObstaclesData   = obstacle;
 
     ObstaclesLength = [ size(obstacle, 2) ];
+end
+
+function [ ObstaclesData ObstaclesLength ] = build_obstacles_8()
+    n           = 5;
+    width       = 2;
+    height      = 3;
+    left_bottom = [ 3 3 ];
+
+    side_1      = [linspace(0.7, 2.5, n); linspace(2.1, 1.3, n)];
+    side_2      = [linspace(2.5, 1.8, n); linspace(1.3, 3.2, n)];
+    side_3      = [linspace(1.8, 0.7, n); linspace(3.2, 2.1, n)];
+
+    obstacle_1  = [side_1(:, 1:n-1) ...
+                   side_2(:, 1:n-1) ...
+                   side_3(:, 1:n-1)];
+
+    obstacle_1(1, :) = obstacle_1(1, :) / 10 * width  + left_bottom(1);
+    obstacle_1(2, :) = obstacle_1(2, :) / 10 * height + left_bottom(2);
+
+    ObstaclesData   = [ obstacle_1 ];
+
+    ObstaclesLength = [ size(obstacle_1, 2) ];
 end
 
 function [ ObstaclesData ObstaclesLength ] = build_obstacles_9()
@@ -218,7 +265,6 @@ function [ ObstaclesData ObstaclesLength ] = build_obstacles_9()
 
     ObstaclesLength = [ size(obstacle_1, 2) size(obstacle_2, 2) ];
 end
-
 
 function plot_data(ObstaclesData, ...
                    ObstaclesLength, ...
