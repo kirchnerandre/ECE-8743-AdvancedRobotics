@@ -36,10 +36,6 @@ function RadarData = compute_obstacle(ObstaclesData, ...
             angle_max = ceil (max(fix(mod(360 + obstacle_angles(index_first), 360)), ...
                                   fix(mod(360 + obstacle_angles(index_last ), 360))));
 
-if angle_min < 0 || angle_max < 0
-    [i angle_min angle_max]
-end
-
             for j = angle_min:angle_max
                 angle       = mod(j + 360 - 1, 360) + 1;
 

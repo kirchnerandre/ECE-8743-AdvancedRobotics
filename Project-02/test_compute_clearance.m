@@ -2,7 +2,8 @@ close all
 clear all
 clc
 
-test_7()
+%test_7()
+test_9()
 
 function test_7()
     clearance   = 20;
@@ -15,9 +16,25 @@ function test_7()
 
     plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range, [ 2 4 3 4 ]);
 
-%    radar_data = compute_clearance(radar_data, clearance);
+    radar_data = compute_clearance(radar_data, clearance);
 
     plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range, [ 2 4 3 4 ]);
+end
+
+function test_9()
+    clearance   = 20;
+    radar_range = 0.5;
+    position    = [ 3.6170; 3.5450 ];
+
+    [ obstacles_data obstacles_length ] = build_obstacles_9();
+
+    radar_data = compute_radar(obstacles_data, obstacles_length, position, radar_range);
+
+    plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range, [ 3.0 4.5 3.0 4.5 ]);
+
+    radar_data = compute_clearance(radar_data, clearance);
+
+    plot_data(obstacles_data, obstacles_length, position, radar_data, radar_range, [ 3.0 4.5 3.0 4.5 ]);
 end
 
 function [ ObstaclesData ObstaclesLength ] = build_obstacles_7()
@@ -38,6 +55,33 @@ function [ ObstaclesData ObstaclesLength ] = build_obstacles_7()
     obstacle(2, :) = obstacle(2, :) / 10 * height + left_bottom(2);
 
     ObstaclesData   = obstacle;
+
+    ObstaclesLength = [ size(obstacle, 2) ];
+end
+
+function [ ObstaclesData ObstaclesLength ] = build_obstacles_9()
+    n           = 100;
+    width       = 2;
+    height      = 3;
+    left_bottom = [ 3 3 ];
+    
+    side_4      = [linspace(5.0, 5.2, n); linspace(3.0, 1.9, n)];
+    side_5      = [linspace(5.2, 6.9, n); linspace(1.9, 1.8, n)];
+    side_6      = [linspace(6.9, 7.1, n); linspace(1.8, 3.1, n)];
+    side_7      = [linspace(7.1, 6.3, n); linspace(3.1, 4.1, n)];
+    side_8      = [linspace(6.3, 5.0, n); linspace(4.1, 3.0, n)];
+
+    obstacle    = [side_4(:, 1:n-1) ...
+                   side_5(:, 1:n-1) ...
+                   side_6(:, 1:n-1) ...
+                   side_7(:, 1:n-1) ...
+                   side_8(:, 1:n-1)];
+
+    obstacle(1, :) = obstacle(1, :) / 10 * width  + left_bottom(1);
+    obstacle(2, :) = obstacle(2, :) / 10 * height + left_bottom(2);
+
+
+    ObstaclesData   = [ obstacle ];
 
     ObstaclesLength = [ size(obstacle, 2) ];
 end

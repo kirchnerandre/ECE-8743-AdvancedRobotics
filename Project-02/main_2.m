@@ -38,7 +38,7 @@ while true
 
     step = step + 1
 
-    if step == 71
+    if step == 88
         step;
     end
 
