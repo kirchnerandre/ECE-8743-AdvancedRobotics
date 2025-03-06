@@ -35,9 +35,9 @@ step = 0;
 
 while true
 
-    step = step + 1
+    step = step + 1;
 
-    if step == 88
+    if step == 13
         step;
     end
 

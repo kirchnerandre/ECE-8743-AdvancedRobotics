@@ -31,10 +31,11 @@ function [ PositionMiddle PositionBegin ] = compute_step_2(PositionBegin, Positi
             if distance_new < distance
                 distance    = distance_new;
 
-                PositionBegin   = PositionBegin + StepSize * [ sin(angle_indirect * pi / 180); ...
-                                                               cos(angle_indirect * pi / 180) ];
+                PositionMiddle  = PositionBegin + RadarData(angle_indirect) * [ sin(angle_indirect * pi / 180); ...
+                                                                                cos(angle_indirect * pi / 180) ];
 
-                PositionMiddle  = RadarData(angle_indirect);
+                PositionBegin   = PositionBegin + StepSize                  * [ sin(angle_indirect * pi / 180); ...
+                                                                                cos(angle_indirect * pi / 180) ];
             end
         end
     end
