@@ -1,5 +1,9 @@
-function [ PositionMiddle PositionBegin ] = compute_step_3(PositionBegin, PositionFinal, RadarData, StepSize)
-    angle_direct = round(atan2(PositionFinal(2) - PositionBegin(2), PositionFinal(1) - PositionBegin(1)) * 180 / pi);
+function [ PositionMiddle PositionBegin ] = compute_step_3(PositionBegin, ...
+                                                           PositionEnd, ...
+                                                           RadarData, ...
+                                                           StepSize)
+    angle_direct = round(atan2(PositionEnd(2) - PositionBegin(2), ...
+                               PositionEnd(1) - PositionBegin(1)) * 180 / pi);
 
     if angle_direct == 0
         angle_direct = 360;
@@ -19,10 +23,16 @@ function [ PositionMiddle PositionBegin ] = compute_step_3(PositionBegin, Positi
             j = mod(i, 360) + 1;
 
             if RadarData(i) == Inf && RadarData(j) ~= Inf
-                distance_new    = compute_distance(PositionBegin, PositionFinal, RadarData, j);
+                distance_new    = compute_distance(PositionBegin, ...
+                                                   PositionEnd, ...
+                                                   RadarData, ...
+                                                   j);
                 angle_indirect  = j;
             elseif RadarData(i) ~= Inf && RadarData(j) == Inf
-                distance_new    = compute_distance(PositionBegin, PositionFinal, RadarData, i);
+                distance_new    = compute_distance(PositionBegin, ...
+                                                   PositionEnd, ...
+                                                   RadarData, ...
+                                                   i);
                 angle_indirect  = i;
             else
                 continue
@@ -30,23 +40,25 @@ function [ PositionMiddle PositionBegin ] = compute_step_3(PositionBegin, Positi
 
             if distance_new < distance
                 distance        = distance_new;
+                value_sin       = sin(angle_indirect * pi / 180);
+                value_cos       = cos(angle_indirect * pi / 180);
 
-                PositionMiddle  = PositionBegin + RadarData(angle_indirect) * [ cos(angle_indirect * pi / 180); ...
-                                                                                sin(angle_indirect * pi / 180) ];
+                PositionMiddle  = PositionBegin + ...
+                                  RadarData(angle_indirect) * [ value_cos; value_sin ];
 
-                PositionBegin   = PositionBegin + StepSize                  * [ cos(angle_indirect * pi / 180); ...
-                                                                                sin(angle_indirect * pi / 180) ];
+                PositionBegin   = PositionBegin + ...
+                                  StepSize                  * [ value_cos; value_sin ];
             end
         end
     end
 end
 
-function Distance = compute_distance(PositionBegin, PositionFinal, RadarData, Angle)
+function Distance = compute_distance(PositionBegin, PositionEnd, RadarData, Angle)
     Position_middle = PositionBegin + [sin(Angle * pi / 180); ...
                                        cos(Angle * pi / 180)] .* RadarData(Angle);
 
     Distance = sqrt((Position_middle(1) - PositionBegin(1)) ^ 2 ...
                   + (Position_middle(2) - PositionBegin(2)) ^ 2) ...
-             + sqrt((Position_middle(1) - PositionFinal(1)) ^ 2 ...
-                  + (Position_middle(2) - PositionFinal(2)) ^ 2);
+             + sqrt((Position_middle(1) - PositionEnd(1)  ) ^ 2 ...
+                  + (Position_middle(2) - PositionEnd(2)  ) ^ 2);
 end
