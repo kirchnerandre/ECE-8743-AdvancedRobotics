@@ -38,19 +38,31 @@ function plot_radar_detection(PositionBegin, RadarData, SensorAngle)
 
         if index_first ~= -1 && index_last ~= -1
             if index_first > index_last
-                radar_detection_new = plot(radar_data(1:index_first) .* cos(angles(1:index_first)) + PositionBegin(1), ...
-                                           radar_data(1:index_first) .* sin(angles(1:index_first)) + PositionBegin(2), ...
-                                           'Color', 'red', "LineWidth", 5);
+                xs = radar_data(1:index_first) .* cos(angles(1:index_first)) ...
+                   + PositionBegin(1);
+
+                ys = radar_data(1:index_first) .* sin(angles(1:index_first)) ...
+                   + PositionBegin(2);
+
+                radar_detection_new = plot(xs, ys, 'Color', 'red', "LineWidth", 5);
                 radar_detection     = [ radar_detection radar_detection_new ];
 
-                radar_detection_new = plot(radar_data(index_last:361) .* cos(angles(index_last:361)) + PositionBegin(1), ...
-                                           radar_data(index_last:361) .* sin(angles(index_last:361)) + PositionBegin(2), ...
-                                           'Color', 'red', "LineWidth", 5);
+                xs = radar_data(index_last:361) .* cos(angles(index_last:361)) ...
+                   + PositionBegin(1);
+
+                ys = radar_data(index_last:361) .* sin(angles(index_last:361)) ...
+                   + PositionBegin(2);
+
+                radar_detection_new = plot(xs, ys, 'Color', 'red', "LineWidth", 5);
                 radar_detection     = [ radar_detection radar_detection_new ];
             else
-                radar_detection_new = plot(radar_data(index_first:index_last) .* cos(angles(index_first:index_last)) + PositionBegin(1), ...
-                                           radar_data(index_first:index_last) .* sin(angles(index_first:index_last)) + PositionBegin(2), ...
-                                           'Color', 'red', "LineWidth", 5);
+                xs = radar_data(index_first:index_last) ...
+                   .* cos(angles(index_first:index_last)) + PositionBegin(1);
+
+                ys = radar_data(index_first:index_last) ...
+                    .* sin(angles(index_first:index_last)) + PositionBegin(2);
+
+                radar_detection_new = plot(xs, ys, 'Color', 'red', "LineWidth", 5);
                 radar_detection     = [ radar_detection radar_detection_new ];
             end
 
