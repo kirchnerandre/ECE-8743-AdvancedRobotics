@@ -5,6 +5,8 @@ function plot_radar_detection(PositionBegin, RadarData, SensorAngle)
         for i = 1:size(radar_detection, 2)
             delete(radar_detection(i))
         end
+
+        radar_detection = [];
     end
 
     radar_data  = [ RadarData RadarData(1) ];
@@ -27,7 +29,11 @@ function plot_radar_detection(PositionBegin, RadarData, SensorAngle)
         end
 
         if RadarData(k) == Inf && index_first ~= -1 && index_last == -1
-            index_last = k - 1;
+            if k == 1
+                index_last = 360;
+            else
+                index_last = k - 1;
+            end
         end
 
         if index_first ~= -1 && index_last ~= -1

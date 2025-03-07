@@ -2,7 +2,7 @@ close all
 clear all
 clc
 
-clearance       = 20;
+clearance       = 10;
 step_size       = 0.01;
 sensor_range    = 0.5;
 sensor_error    = 5;
@@ -31,21 +31,12 @@ plot_obstacles(obstacles_data, obstacles_length);
 plot(position_begin(1), position_begin(2), 'r+', "LineWidth", 2, "MarkerSize", 5)
 plot(position_final(1), position_final(2), 'r*', "LineWidth", 2, "MarkerSize", 5)
 
-step = 0;
-
 while true
-
-    step = step + 1;
-
-    if step == 75
-        step;
-    end
-
     radar_data = compute_radar(obstacles_data, obstacles_length, position_begin, sensor_range);
 
     radar_data = compute_clearance(radar_data, clearance);
 
-    [ position_middle position_begin ] = compute_step_2(position_begin, ...
+    [ position_middle position_begin ] = compute_step_3(position_begin, ...
                                                         position_final, ...
                                                         radar_data, ...
                                                         step_size);
