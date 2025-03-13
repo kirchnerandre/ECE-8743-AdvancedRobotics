@@ -22,6 +22,9 @@ function RadarData = compute_obstacle(ObstaclesData, ...
                                       PositionCurrent, ...
                                       SensorRange, ...
                                       RadarData)
+    % Function looks for consecutive obstacle points that have angles
+    % smaller and bigger integer values. For example 
+
     obstacle_angles = atan2(ObstaclesData(2, :) - PositionCurrent(2), ...
                             ObstaclesData(1, :) - PositionCurrent(1)) .* 180 ./ pi;
 
@@ -61,6 +64,10 @@ function RadarData = compute_obstacle(ObstaclesData, ...
 end
 
 function Distance = compute_distance(PointA, PointB, PointO, Angle)
+    % Function finds the intersection P between line AB and line OZ, and
+    % returns the distance |OP|. OZ is the straight line going through
+    % point O with Angle degress.
+
     m_oz    = tan(Angle * pi / 180);
 
     n_oz    =  PointO(2) - PointO(1) * m_oz;
