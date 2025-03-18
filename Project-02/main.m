@@ -56,6 +56,9 @@ function [ Time Distance ] = main(PositionBegin, ...
 
         if distance < StepSize
             break
+        elseif steps > 1000
+            steps = 0;
+            break;
         end
 
         steps = steps + 1;
