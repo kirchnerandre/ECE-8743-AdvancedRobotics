@@ -13,7 +13,7 @@ step_sizes      = [ 0.05; 0.10; 0.15 ];
 clearance       = 10;
 filename        = 'map_0.txt';
 
-for i = 2
+for i = 3
     for j = 1:length(sensor_ranges)
         for k = 1:length(step_sizes)
             sensor_range    = sensor_ranges(j);

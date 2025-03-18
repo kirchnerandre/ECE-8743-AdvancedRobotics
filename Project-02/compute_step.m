@@ -23,20 +23,17 @@ function [ PositionMiddle PositionBegin ] = compute_step(PositionBegin, ...
             j = mod(i, 360) + 1;
 
             if RadarData(i) == Inf && RadarData(j) ~= Inf
-                distance_new    = compute_distance(PositionBegin, ...
-                                                   PositionEnd, ...
-                                                   RadarData, ...
-                                                   j);
                 angle_indirect  = j;
             elseif RadarData(i) ~= Inf && RadarData(j) == Inf
-                distance_new    = compute_distance(PositionBegin, ...
-                                                   PositionEnd, ...
-                                                   RadarData, ...
-                                                   i);
                 angle_indirect  = i;
             else
                 continue
             end
+
+            distance_new = compute_distance(PositionBegin, ...
+                                            PositionEnd, ...
+                                            RadarData, ...
+                                            angle_indirect);
 
             if distance_new < distance
                 distance        = distance_new;
@@ -63,4 +60,26 @@ function Distance = compute_distance(PositionBegin, PositionEnd, RadarData, Angl
                   + (Position_middle(2) - PositionBegin(2)) ^ 2) ...
              + sqrt((Position_middle(1) - PositionEnd(1)  ) ^ 2 ...
                   + (Position_middle(2) - PositionEnd(2)  ) ^ 2);
+end
+
+function Angle = use_angle(AngleCurrent, AnglePrevious, AngleDiffMax)
+    if AnglePrevious < 0
+        Angle = AngleCurrent;
+    else
+        angle_diff = AngleCurrent - AnglePrevious;
+
+        if angle_diff < -180
+            angle_diff = angle_diff + 360;
+        elseif angle_diff > 180
+            angle_diff = angle_diff - 360;
+        end
+
+        if angle_diff < - AngleDiffMax
+            Angle = AnglePrevious - AngleDiffMax;
+        elseif angle_diff > AngleDiffMax
+            Angle = AnglePrevious + AngleDiffMax;
+        else
+            Angle = AngleCurrent;
+        end
+    end
 end
