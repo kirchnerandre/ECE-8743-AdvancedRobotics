@@ -28,8 +28,14 @@ function [ Time Distance ] = main(PositionBegin, ...
     distance_total = 0;
 
     tic
-
+step = 0;
     while true
+step = step + 1
+
+if step == 49
+    step
+end
+
         radar_data = compute_radar(obstacles_data, ...
                                    obstacles_length, ...
                                    position_begin, ...
