@@ -24,18 +24,12 @@ function [ Time Distance ] = main(PositionBegin, ...
     plot(PositionBegin(1), PositionBegin(2), 'r+', "LineWidth", 2, "MarkerSize", 5)
     plot(PositionEnd(1),   PositionEnd(2),   'r*', "LineWidth", 2, "MarkerSize", 5)
 
-    position_begin = PositionBegin;
-    distance_total = 0;
+    position_begin  = PositionBegin;
+    steps           = 0;
 
     tic
-step = 0;
+
     while true
-step = step + 1
-
-if step == 49
-    step
-end
-
         radar_data = compute_radar(obstacles_data, ...
                                    obstacles_length, ...
                                    position_begin, ...
@@ -44,13 +38,10 @@ end
         radar_data = compute_clearance(radar_data, Clearance);
 
         [ position_middle ...
-          position_begin ...
-          distance_partial ] = compute_step(position_begin, ...
-                                            PositionEnd, ...
-                                            radar_data, ...
-                                            StepSize);
-
-        distance_total = distance_total + distance_partial;
+          position_begin ] = compute_step(position_begin, ...
+                                          PositionEnd, ...
+                                          radar_data, ...
+                                          StepSize);
 
         plot_robot(position_begin)
 
@@ -67,9 +58,11 @@ end
             break
         end
 
+        steps = steps + 1;
+
         pause(0.01)
     end
 
     Time        = toc;
-    Distance    = distance_total;
+    Distance    = steps * StepSize;
 end
