@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 
-#include "Headers/PolygonCpu.h"
+#include "PolygonCpu.h"
 
 
 int main(int argc, char** argv)
