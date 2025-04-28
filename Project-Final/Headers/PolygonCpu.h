@@ -9,8 +9,20 @@ struct VERTEX_T
     float Y;
 };
 
-typedef std::vector<VERTEX_T>   POLYGOM_T;
+typedef std::vector<VERTEX_T> VERTICES_T;
 
-bool polygon_create(POLYGOM_T& Polygon, VERTEX_T& VertexUpLeft, VERTEX_T& VertexLowerRight, size_t Vertices);
+typedef std::vector<uint32_t> SIZES_T;
+
+void polygons_initialize();
+
+bool polygons_create(
+    VERTICES_T& Vertices,
+    SIZES_T&    Sizes,
+    float       XMin,
+    float       XMax,
+    float       YMin,
+    float       YMax,
+    uint32_t    PolygonsNumber,
+    uint32_t    PolygonsSides);
 
 #endif // _POLYGON_CPU_

@@ -6,12 +6,10 @@
 
 int main(int argc, char** argv)
 {
-    POLYGOM_T   polygon;
-    VERTEX_T    vertex_up_left;
-    VERTEX_T    vertex_lower_right;
-    size_t      vertices            = 10u;
+    VERTICES_T  vertices;
+    SIZES_T     sizes;
 
-    if (!polygon_create(polygon, vertex_up_left, vertex_lower_right, vertices))
+    if (!polygons_create(vertices, sizes, 0.0f, 5.0f, 0.0f, 5.0f, 10u, 5u))
     {
         return -1;
     }
