@@ -1,5 +1,6 @@
 add_library(ProjectFinal STATIC
+    Interface.cpp
     PolygonCpu.cpp
-    PolygonGpu.cu)
+    PolygonGpu.cu "DataTypes.cpp")
 
 target_include_directories(ProjectFinal PRIVATE ../Headers)
