@@ -33,8 +33,8 @@ namespace
 
     bool get_vertices(VERTICES_T& Vertices, size_t Numbers, std::string& Filename)
     {
-        bool    ret_val = true;
-        FILE*   file    = nullptr;
+        bool        ret_val = true;
+        FILE*       file    = nullptr;
         std::string number;
 
         if (fopen_s(&file, Filename.c_str(), "r"))

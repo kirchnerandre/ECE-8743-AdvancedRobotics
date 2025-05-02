@@ -47,9 +47,9 @@ namespace
 
 int main()
 {
-    std::string         filename_1          = "../../../Maps/Map1.txt";
-    std::string         filename_2          = "../../../Maps/Map2.txt";
-    std::string         filename_3          = "../../../Maps/Map3.txt";
+    std::string         filename_1          = "../../Maps/Map1.txt";
+    std::string         filename_2          = "../../Maps/Map2.txt";
+    std::string         filename_3          = "../../Maps/Map3.txt";
 
     const size_t        expected_polygons_1 = 7u;
     const size_t        expected_polygons_2 = 15u;
