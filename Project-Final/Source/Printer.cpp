@@ -345,7 +345,7 @@ bool print(
 
     for (int32_t y = 0; y < height; y++)
     {
-        for (int32_t x = 0; y < width; x++)
+        for (int32_t x = 0; x < width; x++)
         {
             fprintf(file, "%4d", canvas[channels * (y * width + x) + 0]);
             fprintf(file, "%4d", canvas[channels * (y * width + x) + 1]);

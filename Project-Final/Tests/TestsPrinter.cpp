@@ -6,6 +6,59 @@
 
 namespace
 {
+    bool compare(std::string& MapA, std::string& MapB)
+    {
+        bool    ret_val = true;
+        FILE*   file_a  = nullptr;
+        FILE*   file_b  = nullptr;
+
+        if (fopen_s(&file_a, MapA.c_str(), "r"))
+        {
+            fprintf(stderr, "%s:%d:%s: Failed to open file\n", __FILE__, __LINE__, __FUNCTION__);
+            ret_val = false;
+            goto terminate;
+        }
+
+        if (fopen_s(&file_b, MapB.c_str(), "r"))
+        {
+            fprintf(stderr, "%s:%d:%s: Failed to open file\n", __FILE__, __LINE__, __FUNCTION__);
+            ret_val = false;
+            goto terminate;
+        }
+
+        while (1)
+        {
+            char symbol_a = getc(file_a);
+            char symbol_b = getc(file_b);
+
+            if (symbol_a != symbol_b)
+            {
+                fprintf(stderr, "%s:%d:%s: Failed symbols\n", __FILE__, __LINE__, __FUNCTION__);
+                ret_val = false;
+                goto terminate;
+            }
+            else if (symbol_a == EOF)
+            {
+                break;
+            }
+        }
+
+
+terminate:
+        if (file_a)
+        {
+            fclose(file_a);
+        }
+
+        if (file_b)
+        {
+            fclose(file_b);
+        }
+
+        return ret_val;
+    }
+
+
     bool test_1()
     {
         EDGES_T edges = {
@@ -44,11 +97,22 @@ namespace
             { { 13,  8 }, { 13,  0 }, false },
             { { 13,  0 }, { 11,  0 }, false } };
 
-        std::string filename  = "./map1.ppm";
-        VERTEX_T    begin     = {  0, 16 };
-        VERTEX_T    end       = { 16,  0 };
+        std::string expected    = "../../Data/Testing/expected_map1.ppm";;
+        std::string filename    = "./map1.ppm";
+        VERTEX_T    begin       = {  0, 16 };
+        VERTEX_T    end         = { 16,  0 };
 
-        print(filename, begin, end, edges);
+        if (!print(filename, begin, end, edges))
+        {
+            fprintf(stderr, "%s:%d:%s: Print map failed\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (!compare(expected, filename))
+        {
+            fprintf(stderr, "%s:%d:%s: Invalid generated picture\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
 
         return true;
     }
@@ -137,11 +201,22 @@ namespace
             { { 1950, 1200 }, { 1900,  950 }, true },
             { { 1900,  950 }, { 1650, 1050 }, true } };
 
-        std::string filename  = "./map2.ppm";
-        VERTEX_T    begin     = {  200,  200 };
-        VERTEX_T    end       = { 1800, 1800 };
+        std::string expected    = "../../Data/Testing/expected_map2.ppm";
+        std::string filename    = "./map2.ppm";
+        VERTEX_T    begin       = {  200,  200 };
+        VERTEX_T    end         = { 1800, 1800 };
 
-        print(filename, begin, end, edges);
+        if (!print(filename, begin, end, edges))
+        {
+            fprintf(stderr, "%s:%d:%s: Print map failed\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (!compare(expected, filename))
+        {
+            fprintf(stderr, "%s:%d:%s: Invalid generated picture\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
 
         return true;
     }
@@ -150,6 +225,15 @@ namespace
 
 int main()
 {
-    test_1();
-    test_2();
+    if (!test_1())
+    {
+        fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
+        return -1;
+    }
+
+    if (!test_2())
+    {
+        fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
+        return -1;
+    }
 }
