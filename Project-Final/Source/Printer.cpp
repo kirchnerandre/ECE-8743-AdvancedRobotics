@@ -143,20 +143,40 @@ namespace
     {
         int32_t channels    = 3;
         float   radius      = 2.0f;
-        float   x           = Edge.VertexA.X;
-        float   y           = Edge.VertexA.Y;
+        float   x_initial   = 0.0f;
+        float   y_initial   = 0.0f;
+        float   x_final     = 0.0f;
+        float   y_final     = 0.0f;
+        float   x_step      = 0.0f;
+        float   y_step      = 1.0f;
 
-        float   step_y      = Edge.VertexB.Y >= Edge.VertexA.Y ? 1.0f : -1.0f;
-
-        float   step_x      = static_cast<float>(Edge.VertexB.X - Edge.VertexA.X)
-                                              / (Edge.VertexB.Y - Edge.VertexA.Y);
-
-        while (y <= static_cast<float>(Edge.VertexB.Y))
+        if (Edge.VertexA.Y < Edge.VertexB.Y)
         {
+            x_initial   = Edge.VertexA.X;
+            x_final     = Edge.VertexB.X;
+            y_initial   = Edge.VertexA.Y;
+            y_final     = Edge.VertexB.Y;
+        }
+        else
+        {
+            x_initial   = Edge.VertexB.X;
+            x_final     = Edge.VertexA.X;
+            y_initial   = Edge.VertexB.Y;
+            y_final     = Edge.VertexA.Y;
+        }
+
+        float   x = x_initial;
+        float   y = y_initial;
+
+        x_step = (x_final - x_initial) / std::abs(y_final - y_initial);
+
+        while (y <= y_final)
+        {
+            int32_t coordinate_y = static_cast<int32_t>(y + 0.5f);
+
             for (float delta = - radius; delta <= + radius; delta += 1.0f)
             {
                 int32_t coordinate_x = static_cast<int32_t>(x + 0.5f + delta);
-                int32_t coordinate_y = static_cast<int32_t>(y + 0.5f);
 
                 if ((Borders.XMin <= coordinate_x) && (coordinate_x < Borders.XMax)
                  && (Borders.YMin <= coordinate_y) && (coordinate_y < Borders.YMax))
@@ -174,8 +194,8 @@ namespace
                 }
             }
 
-            x += step_x;
-            y += step_y;
+            x += x_step;
+            y += y_step;
         }
     }
 
