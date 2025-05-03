@@ -1,4 +1,5 @@
 
+#include <cmath>
 #include <stdio.h>
 
 #include "Printer.h"
@@ -47,10 +48,10 @@ namespace
             initial_y_max = i->VertexB.Y > initial_y_max ? i->VertexB.Y : initial_y_max;
         }
 
-        int32_t final_height    = (initial_y_max - initial_y_min) / (initial_x_max - initial_x_min) * final_width;
+        int32_t final_height    = static_cast<float>(initial_y_max - initial_y_min) / (initial_x_max - initial_x_min) * final_width + 0.5f;
 
-        int32_t final_y_min     = final_height *          final_margin;
-        int32_t final_y_max     = final_height * ( 1.0f - final_margin);
+        int32_t final_y_min     = static_cast<float>(final_height) *          final_margin  + 0.5f;
+        int32_t final_y_max     = static_cast<float>(final_height) * ( 1.0f - final_margin) + 0.5f;
 
         Begin.X = final_x_min + static_cast<float>((Begin.X - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min) + 0.5f;
         Begin.Y = final_y_min + static_cast<float>((Begin.Y - initial_y_min) * (final_y_max - final_y_min)) / (initial_y_max - initial_y_min) + 0.5f;
@@ -183,19 +184,39 @@ namespace
     {
         int32_t channels    = 3;
         float   radius      = 2.0f;
-        float   x           = Edge.VertexA.X;
-        float   y           = Edge.VertexA.Y;
+        float   x_initial   = 0.0f;
+        float   y_initial   = 0.0f;
+        float   x_final     = 0.0f;
+        float   y_final     = 0.0f;
+        float   x_step      = 1.0f;
+        float   y_step      = 0.0f;
 
-        float   step_x      = Edge.VertexB.X >= Edge.VertexA.X ? 1.0f : -1.0f;
-
-        float   step_y      = static_cast<float>(Edge.VertexB.Y - Edge.VertexA.Y)
-                                              / (Edge.VertexB.X - Edge.VertexA.X);
-
-        while (x <= static_cast<float>(Edge.VertexB.X))
+        if (Edge.VertexA.X < Edge.VertexB.X)
         {
+            x_initial   = Edge.VertexA.X;
+            x_final     = Edge.VertexB.X;
+            y_initial   = Edge.VertexA.Y;
+            y_final     = Edge.VertexB.Y;
+        }
+        else
+        {
+            x_initial   = Edge.VertexB.X;
+            x_final     = Edge.VertexA.X;
+            y_initial   = Edge.VertexB.Y;
+            y_final     = Edge.VertexA.Y;
+        }
+
+        float   x = x_initial;
+        float   y = y_initial;
+
+        y_step = (y_final - y_initial) / std::abs(x_final - x_initial);
+
+        while (x <= x_final)
+        {
+            int32_t coordinate_x = static_cast<int32_t>(x + 0.5f);
+
             for (float delta = - radius; delta <= + radius; delta += 1.0f)
             {
-                int32_t coordinate_x = static_cast<int32_t>(x + 0.5f);
                 int32_t coordinate_y = static_cast<int32_t>(y + 0.5f + delta);
 
                 if ((Borders.XMin <= coordinate_x) && (coordinate_x < Borders.XMax)
@@ -214,27 +235,31 @@ namespace
                 }
             }
 
-            x += step_x;
-            y += step_y;
+            x += x_step;
+            y += y_step;
         }
     }
 
 
     void draw_edge(uint8_t* Canvas, BORDERS_T& Borders, EDGE_T& Edge)
     {
+printf("(%d, %d) (%d, %d)\n", Edge.VertexA.X, Edge.VertexA.Y, Edge.VertexB.X, Edge.VertexB.Y);
         int32_t delta_x = Edge.VertexA.X - Edge.VertexB.X >= 0 ? Edge.VertexA.X - Edge.VertexB.X : Edge.VertexB.X - Edge.VertexA.X;
         int32_t delta_y = Edge.VertexA.Y - Edge.VertexB.Y >= 0 ? Edge.VertexA.Y - Edge.VertexB.Y : Edge.VertexB.Y - Edge.VertexA.Y;
-
+printf("%d %d\n", delta_x, delta_y);
         if (delta_x == 0)
         {
+printf("a\n");
             draw_edge_vertical_pure(Canvas, Borders, Edge);
         }
         else if (delta_y >= delta_x)
         {
+printf("b\n");
             draw_edge_vertical_more(Canvas, Borders, Edge);
         }
         else // if (delta_x < delta_y)
         {
+printf("c\n");
             draw_edge_horizontal_more(Canvas, Borders, Edge);
         }
     }
