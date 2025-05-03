@@ -6,6 +6,71 @@
 
 namespace
 {
+    struct BORDERS_T
+    {
+        int32_t XMin;
+        int32_t XMax;
+        int32_t YMin;
+        int32_t YMax;
+    };
+
+
+    void scale(BORDERS_T& Borders, VERTEX_T& Begin, VERTEX_T& End, EDGES_T& Edges)
+    {
+        constexpr float     final_margin    = 0.05f;
+        constexpr int32_t   final_width     = 1000;
+        constexpr int32_t   final_x_min     = 50;
+        constexpr int32_t   final_x_max     = 950;
+        int32_t             initial_x_min   = Begin.X;
+        int32_t             initial_x_max   = Begin.X;
+        int32_t             initial_y_min   = Begin.Y;
+        int32_t             initial_y_max   = Begin.Y;
+
+        initial_x_min = End.X < initial_x_min ? End.X : initial_x_min;
+        initial_x_max = End.X > initial_x_max ? End.X : initial_x_max;
+
+        initial_y_min = End.Y < initial_y_min ? End.Y : initial_y_min;
+        initial_y_max = End.Y > initial_y_max ? End.Y : initial_y_max;
+
+        for (IEDGE_T i = Edges.begin(); i != Edges.end(); i++)
+        {
+            initial_x_min = i->VertexA.X < initial_x_min ? i->VertexA.X : initial_x_min;
+            initial_x_max = i->VertexA.X > initial_x_max ? i->VertexA.X : initial_x_max;
+
+            initial_x_min = i->VertexB.X < initial_x_min ? i->VertexB.X : initial_x_min;
+            initial_x_max = i->VertexB.X > initial_x_max ? i->VertexB.X : initial_x_max;
+
+            initial_y_min = i->VertexA.Y < initial_y_min ? i->VertexA.Y : initial_y_min;
+            initial_y_max = i->VertexA.Y > initial_y_max ? i->VertexA.Y : initial_y_max;
+
+            initial_y_min = i->VertexB.Y < initial_y_min ? i->VertexB.Y : initial_y_min;
+            initial_y_max = i->VertexB.Y > initial_y_max ? i->VertexB.Y : initial_y_max;
+        }
+
+        int32_t final_height    = (initial_y_max - initial_y_min) / (initial_x_max - initial_x_min) * final_width;
+
+        int32_t final_y_min     = final_height *          final_margin;
+        int32_t final_y_max     = final_height * ( 1.0f - final_margin);
+
+        for (IEDGE_T i = Edges.begin(); i != Edges.end(); i++)
+        {
+            i->VertexA.X = final_x_min + static_cast<float>((i->VertexA.X - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min) + 0.5f;
+            i->VertexB.X = final_x_min + static_cast<float>((i->VertexB.X - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min) + 0.5f;
+
+            i->VertexA.Y = final_y_min + static_cast<float>((i->VertexA.Y - initial_y_min) * (final_y_max - final_y_min)) / (initial_y_max - initial_y_min) + 0.5f;
+            i->VertexB.Y = final_y_min + static_cast<float>((i->VertexB.Y - initial_y_min) * (final_y_max - final_y_min)) / (initial_y_max - initial_y_min) + 0.5f;
+        }
+
+        Borders = { 0, final_width, 0, final_height };
+    }
+
+
+    void draw()
+    {
+
+    }
+
+
     void print_canvas(uint8_t* Canvas, BORDERS_T& Borders)
     {
         int32_t channels    = 3;
@@ -75,32 +140,27 @@ namespace
 
 bool print(
     std::string&    Filename,
-    BORDERS_T&      Borders,
     VERTEX_T&       Begin,
     VERTEX_T&       End,
     EDGES_T&        Edges)
 {
     constexpr uint32_t  channels    = 3u;
-    int32_t             size        = (Borders.XMax - Borders.XMin)
-                                    * (Borders.YMax - Borders.YMin) * channels;
-    uint8_t*            canvas      = new uint8_t[size]{};
+
     bool                ret_val     = true;
+    uint8_t*            canvas      = nullptr;
+    int32_t             width       = 0;
+    int32_t             height      = 0;
+    BORDERS_T           borders{};
 
-canvas[0]   = 255;
-canvas[1]   = 255;
-canvas[9]   = 255;
-canvas[100] = 255;
-print_canvas(canvas, Borders);
+    scale(borders, Begin, End, Edges);
 
-//   draw_begin(canvas, Borders, Begin);
-//print_canvas(canvas, Borders);
-//  draw_end  (canvas, Borders, End);
-//print_canvas(canvas, Borders);
+    height = borders.YMax - borders.YMin;
+    width  = borders.XMax - borders.XMin;
 
-    for (IEDGE_T i = Edges.begin(); i != Edges.end(); i++)
-    {
-        draw_edge(canvas, Borders, *i);
-    }
+    canvas = new uint8_t[channels * width * height]{};
+
+    draw_begin(canvas, borders, Begin);
+    draw_end  (canvas, borders, End);
 
     FILE* file = nullptr;
 
@@ -112,12 +172,9 @@ print_canvas(canvas, Borders);
     }
 
     fprintf(file, "P3 ");
-    fprintf(file, "%d  ", Borders.XMax - Borders.XMin);
-    fprintf(file, "%d\n", Borders.YMax - Borders.YMin);
+    fprintf(file, "%d  ", borders.XMax - borders.XMin);
+    fprintf(file, "%d\n", borders.YMax - borders.YMin);
     fprintf(file, "255\n");
-
-    int32_t height = Borders.YMax - Borders.YMin;
-    int32_t width  = Borders.XMax - Borders.XMin;
 
     for (int32_t y = 0; y < height; y++)
     {
