@@ -52,6 +52,12 @@ namespace
         int32_t final_y_min     = final_height *          final_margin;
         int32_t final_y_max     = final_height * ( 1.0f - final_margin);
 
+        Begin.X = final_x_min + static_cast<float>((Begin.X - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min) + 0.5f;
+        Begin.Y = final_y_min + static_cast<float>((Begin.Y - initial_y_min) * (final_y_max - final_y_min)) / (initial_y_max - initial_y_min) + 0.5f;
+
+        End.Y   = final_y_min + static_cast<float>((End.Y   - initial_y_min) * (final_y_max - final_y_min)) / (initial_y_max - initial_y_min) + 0.5f;
+        End.X   = final_x_min + static_cast<float>((End.X   - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min) + 0.5f;
+
         for (IEDGE_T i = Edges.begin(); i != Edges.end(); i++)
         {
             i->VertexA.X = final_x_min + static_cast<float>((i->VertexA.X - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min) + 0.5f;
@@ -65,38 +71,10 @@ namespace
     }
 
 
-    void draw()
-    {
-
-    }
-
-
-    void print_canvas(uint8_t* Canvas, BORDERS_T& Borders)
-    {
-        int32_t channels    = 3;
-        int32_t width       = Borders.XMax - Borders.XMin;
-        int32_t height      = Borders.YMax - Borders.YMin;
-
-        for (int32_t y = 0; y < height; y++)
-        {
-            for (int32_t x = 0; x < width; x++)
-            {
-                printf("(%3d %3d %3d) ", Canvas[channels * (y * width + x) + 0],
-                                         Canvas[channels * (y * width + x) + 1],
-                                         Canvas[channels * (y * width + x) + 2]);
-            }
-
-            printf("\n");
-        }
-
-        printf("\n");
-    }
-
-
     void draw_begin(uint8_t* Canvas, BORDERS_T& Borders, VERTEX_T& Begin)
     {
         int32_t channels    = 3;
-        int32_t radius      = 2;
+        int32_t radius      = 5;
 
         for (int32_t y = Begin.Y - radius; y <= Begin.Y + radius; y++)
         {
@@ -115,7 +93,7 @@ namespace
     void draw_end(uint8_t* Canvas, BORDERS_T& Borders, VERTEX_T& End)
     {
         int32_t channels    = 3;
-        int32_t radius      = 2;
+        int32_t radius      = 5;
 
         for (int32_t y = End.Y - radius; y <= End.Y + radius; y++)
         {
@@ -124,16 +102,141 @@ namespace
                 if ((Borders.XMin <= x) && (x < Borders.XMax)
                  && (Borders.YMin <= y) && (y < Borders.YMax))
                 {
-                    Canvas[channels * (y * (Borders.XMax - Borders.XMin) + x) + 0] = 255;
+                    Canvas[channels * (y * (Borders.XMax - Borders.XMin) + x) + 2] = 255;
                 }
             }
         }
     }
 
 
+    void draw_edge_vertical_pure(uint8_t* Canvas, BORDERS_T& Borders, EDGE_T& Edge)
+    {
+        int32_t channels    = 3;
+        int32_t radius      = 2;
+        int32_t delta_y     = Edge.VertexB.Y >= Edge.VertexA.Y ? 1 : -1;
+
+        for (int32_t y = Edge.VertexA.Y; y <= Edge.VertexB.Y; y += delta_y)
+        {
+            for (int32_t x = Edge.VertexA.X - radius; x <= Edge.VertexA.X - radius; x++)
+            {
+                if ((Borders.XMin <= x) && (x < Borders.XMax)
+                 && (Borders.YMin <= y) && (y < Borders.YMax))
+                {
+                    if (Edge.Status)
+                    {
+                        Canvas[channels * (y * (Borders.XMax - Borders.XMin) + x) + 0] = 255;
+                    }
+                    else
+                    {
+                        Canvas[channels * (y * (Borders.XMax - Borders.XMin) + x) + 0] = 255;
+                        Canvas[channels * (y * (Borders.XMax - Borders.XMin) + x) + 1] = 255;
+                        Canvas[channels * (y * (Borders.XMax - Borders.XMin) + x) + 2] = 255;
+                    }
+                }
+            }
+        }
+    }
+
+
+    void draw_edge_vertical_more(uint8_t* Canvas, BORDERS_T& Borders, EDGE_T& Edge)
+    {
+        int32_t channels    = 3;
+        float   radius      = 2.0f;
+        float   x           = Edge.VertexA.X;
+        float   y           = Edge.VertexA.Y;
+
+        float   step_y      = Edge.VertexB.Y >= Edge.VertexA.Y ? 1.0f : -1.0f;
+
+        float   step_x      = static_cast<float>(Edge.VertexB.X - Edge.VertexA.X)
+                                              / (Edge.VertexB.Y - Edge.VertexA.Y);
+
+        while (y <= static_cast<float>(Edge.VertexB.Y))
+        {
+            for (float delta = - radius; delta <= + radius; delta += 1.0f)
+            {
+                int32_t coordinate_x = static_cast<int32_t>(x + 0.5f + delta);
+                int32_t coordinate_y = static_cast<int32_t>(y + 0.5f);
+
+                if ((Borders.XMin <= coordinate_x) && (coordinate_x < Borders.XMax)
+                 && (Borders.YMin <= coordinate_y) && (coordinate_y < Borders.YMax))
+                {
+                    if (Edge.Status)
+                    {
+                        Canvas[channels * (coordinate_y * (Borders.XMax - Borders.XMin) + coordinate_x) + 0] = 255;
+                    }
+                    else
+                    {
+                        Canvas[channels * (coordinate_y * (Borders.XMax - Borders.XMin) + coordinate_x) + 0] = 255;
+                        Canvas[channels * (coordinate_y * (Borders.XMax - Borders.XMin) + coordinate_x) + 1] = 255;
+                        Canvas[channels * (coordinate_y * (Borders.XMax - Borders.XMin) + coordinate_x) + 2] = 255;
+                    }
+                }
+            }
+
+            x += step_x;
+            y += step_y;
+        }
+    }
+
+
+    void draw_edge_horizontal_more(uint8_t* Canvas, BORDERS_T& Borders, EDGE_T& Edge)
+    {
+        int32_t channels    = 3;
+        float   radius      = 2.0f;
+        float   x           = Edge.VertexA.X;
+        float   y           = Edge.VertexA.Y;
+
+        float   step_x      = Edge.VertexB.X >= Edge.VertexA.X ? 1.0f : -1.0f;
+
+        float   step_y      = static_cast<float>(Edge.VertexB.Y - Edge.VertexA.Y)
+                                              / (Edge.VertexB.X - Edge.VertexA.X);
+
+        while (x <= static_cast<float>(Edge.VertexB.X))
+        {
+            for (float delta = - radius; delta <= + radius; delta += 1.0f)
+            {
+                int32_t coordinate_x = static_cast<int32_t>(x + 0.5f);
+                int32_t coordinate_y = static_cast<int32_t>(y + 0.5f + delta);
+
+                if ((Borders.XMin <= coordinate_x) && (coordinate_x < Borders.XMax)
+                 && (Borders.YMin <= coordinate_y) && (coordinate_y < Borders.YMax))
+                {
+                    if (Edge.Status)
+                    {
+                        Canvas[channels * (coordinate_y * (Borders.XMax - Borders.XMin) + coordinate_x) + 0] = 255;
+                    }
+                    else
+                    {
+                        Canvas[channels * (coordinate_y * (Borders.XMax - Borders.XMin) + coordinate_x) + 0] = 255;
+                        Canvas[channels * (coordinate_y * (Borders.XMax - Borders.XMin) + coordinate_x) + 1] = 255;
+                        Canvas[channels * (coordinate_y * (Borders.XMax - Borders.XMin) + coordinate_x) + 2] = 255;
+                    }
+                }
+            }
+
+            x += step_x;
+            y += step_y;
+        }
+    }
+
+
     void draw_edge(uint8_t* Canvas, BORDERS_T& Borders, EDGE_T& Edge)
     {
+        int32_t delta_x = Edge.VertexA.X - Edge.VertexB.X >= 0 ? Edge.VertexA.X - Edge.VertexB.X : Edge.VertexB.X - Edge.VertexA.X;
+        int32_t delta_y = Edge.VertexA.Y - Edge.VertexB.Y >= 0 ? Edge.VertexA.Y - Edge.VertexB.Y : Edge.VertexB.Y - Edge.VertexA.Y;
 
+        if (delta_x == 0)
+        {
+            draw_edge_vertical_pure(Canvas, Borders, Edge);
+        }
+        else if (delta_y >= delta_x)
+        {
+            draw_edge_vertical_more(Canvas, Borders, Edge);
+        }
+        else // if (delta_x < delta_y)
+        {
+            draw_edge_horizontal_more(Canvas, Borders, Edge);
+        }
     }
 }
 
@@ -161,6 +264,11 @@ bool print(
 
     draw_begin(canvas, borders, Begin);
     draw_end  (canvas, borders, End);
+
+    for (IEDGE_T i = Edges.begin(); i != Edges.end(); i++)
+    {
+        draw_edge(canvas, borders, *i);
+    }
 
     FILE* file = nullptr;
 
