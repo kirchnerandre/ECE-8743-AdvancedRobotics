@@ -6,44 +6,99 @@
 
 namespace
 {
-    bool polygons_create()
+    bool test_edges_colision(VERTEX_T& VertexA, VERTEX_T& VertexB, VERTEX_T& VertexC, VERTEX_T& VertexD)
     {
-        return true;
+        if ((VertexA.X == VertexB.X) && (VertexB.X == VertexC.X) && (VertexC.X == VertexD.X))
+        {
+            int32_t y_a = VertexA.X >= VertexB.X ? VertexA.X : VertexB.X;
+            int32_t y_b = VertexA.X >= VertexB.X ? VertexB.X : VertexA.X;
+
+            int32_t y_c = VertexC.X >= VertexD.X ? VertexC.X : VertexD.X;
+            int32_t y_d = VertexC.X >= VertexD.X ? VertexD.X : VertexC.X;
+
+            if ((y_a <= y_c) && (y_c <= y_b))
+            {
+                return true;
+            }
+            else if ((y_a <= y_d) && (y_d <= y_b))
+            {
+                return true;
+            }
+            else if ((y_c <= y_a) && (y_a <= y_d))
+            {
+                return true;
+            }
+            else if ((y_c <= y_b) && (y_b <= y_d))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (VertexA.X == VertexB.X)
+        {
+
+        }
+        else if (VertexC.X == VertexD.X)
+        {
+
+        }
+        else
+        {
+            float m_ab  = static_cast<float>(VertexB.Y - VertexA.Y)
+                        / static_cast<float>(VertexB.X - VertexA.X);
+
+            float n_ab  = VertexA.Y - VertexA.X * m_ab;
+
+            float m_cd  = static_cast<float>(VertexD.Y - VertexC.Y)
+                        / static_cast<float>(VertexD.X - VertexC.X);
+
+            float n_cd  = VertexC.Y - VertexC.X * m_cd;
+
+            float x     = - (n_cd - n_ab) / (m_cd - m_ab);
+
+            if ((VertexA.X <= VertexB.X) && (VertexA.X <= x) && (x <= VertexB.X))
+            {
+                return true;
+            }
+            else if ((VertexB.X < VertexA.X) && (VertexB.X <= x) && (x <= VertexA.X))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
 
 
-void polygon_initialize()
+bool test_colision(VERTICES_T& Vertices, int32_t Offset, int32_t Size, EDGE_T& Edge)
 {
-    std::srand(0u);
-}
-
-
-bool polygons_create(
-    VERTICES_T& Vertices,
-    SIZES_T&    Sizes,
-    float       XMin,
-    float       XMax,
-    float       YMin,
-    float       YMax,
-    uint32_t    PolygonsNumber,
-    uint32_t    PolygonsSides)
-{
-    Sizes.resize(PolygonsNumber, 0u);
-
-    for (uint32_t i = 0u; i < PolygonsNumber; i++)
+    for (int32_t i = 0; i < Size; i++)
     {
-        Sizes[i] = 3u + std::rand() % (PolygonsSides - 3u);
+        int32_t offset_c = -1;
+        int32_t offset_d = -1;
+
+        if (i == Size - 1)
+        {
+            offset_c = Offset + i;
+            offset_d = Offset;
+        }
+        else
+        {
+            offset_c = Offset + i;
+            offset_d = Offset + i + 1;
+        }
+
+        if (test_edges_colision(Edge.VertexA, Edge.VertexB, Vertices[offset_c], Vertices[offset_d]))
+        {
+            return true;
+        }
     }
 
-    uint32_t vertices_total = 0u;
-
-    for (uint32_t i = 0u; i < PolygonsNumber; i++)
-    {
-        vertices_total += Sizes[i];
-    }
-
-    Vertices.resize(vertices_total, { 0.0f, 0.0f });
-
-    return true;
+    return false;
 }

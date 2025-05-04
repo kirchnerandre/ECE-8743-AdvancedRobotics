@@ -24,4 +24,7 @@ struct EDGE_T
 typedef std::vector<EDGE_T>     EDGES_T;
 typedef EDGES_T::iterator       IEDGE_T;
 
+typedef std::vector<int32_t>    NUMBERS_T;
+typedef NUMBERS_T::iterator     INUMBER_T;
+
 #endif // _DATA_TYPES_H_
