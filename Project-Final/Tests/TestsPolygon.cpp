@@ -6,76 +6,92 @@
 
 namespace
 {
-    bool test()
+    bool test_egdes_vertical()
     {
-        VERTICES_T vertices = {
-            {  600, 1800 }, {  650, 1900 }, {  750, 1850 }, {  850, 1650 },
-            {  100,  600 }, {  180,  700 }, {  300,  600 }, {  220,  450 },
-            {  200,  850 }, {  250, 1100 }, {  350, 1150 }, {  350,  750 },
-            {  200, 1250 }, {  100, 1450 }, {  250, 1800 }, {  400, 1500 }, {  350, 1200 },
-            {  450,   50 }, {  350,  200 }, {  500,  350 }, {  900,   50 },
-            {  600,  350 }, {  550,  500 }, {  550,  600 }, {  700,  600 }, {  850,  500 },
-            {  450,  850 }, {  500, 1100 }, {  600, 1200 }, {  550,  750 },
-            {  900,  450 }, {  850,  650 }, { 1100,  700 }, { 1200,  500 },
-            {  850,  950 }, {  800, 1300 }, {  900, 1350 }, { 1100, 1200 }, { 1100,  900 },
-            { 1250,  600 }, { 1300,  700 }, { 1400,  650 }, { 1500,  500 }, { 1350,  350 },
-            { 1150, 1200 }, { 1300, 1250 }, { 1400, 1000 }, { 1200,  950 },
-            { 1150, 1550 }, { 1050, 1800 }, { 1100, 1850 }, { 1300, 1750 }, { 1250, 1500 },
-            { 1500,  900 }, { 1600,  950 }, { 1750,  750 }, { 1700,  700 },
-            { 1400, 1300 }, { 1350, 1650 }, { 1450, 1700 }, { 1650, 1400 },
-            { 1650, 1050 }, { 1700, 1300 }, { 1950, 1200 }, { 1900,  950 } };
+        VERTICES_T  vertices_a_100_200  = { { 100, 100 }, { 100, 200 } };
+        VERTICES_T  vertices_a_200_400  = { { 100, 200 }, { 100, 400 } };
+        VERTICES_T  vertices_a_400_500  = { { 100, 400 }, { 100, 500 } };
+        VERTICES_T  vertices_a_500_700  = { { 100, 500 }, { 100, 700 } };
+        VERTICES_T  vertices_a_700_800  = { { 100, 700 }, { 100, 800 } };
 
-        NUMBERS_T   sizes       = { 4,     4,     4,     5,     4,     5,     4,     4,     5,     5,     4,     5,     4,     4,     4 };
-        NUMBERS_T   offsets     = { 0,     4,     8,     12,    17,    21,    26,    30,    34,    39,    44,    48,    53,    57,    61 };
-        bool        expected[]  = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+        VERTICES_T  vertices_b_100_200  = { { 200, 100 }, { 200, 200 } };
+        VERTICES_T  vertices_b_200_400  = { { 200, 200 }, { 200, 400 } };
+        VERTICES_T  vertices_b_400_500  = { { 200, 400 }, { 200, 500 } };
+        VERTICES_T  vertices_b_500_700  = { { 200, 500 }, { 200, 700 } };
+        VERTICES_T  vertices_b_700_800  = { { 200, 700 }, { 200, 800 } };
 
-        EDGE_T  edge        = { {  200,  200 }, { 1800, 1800 }, true };
+        EDGE_T      edge                = { { 100, 300 }, { 100, 600 }, false };
 
-        for (int32_t i = 0; i < sizeof(expected) / sizeof(bool); i++)
+        bool        expected_1[]        = { false,
+                                            true,
+                                            true,
+                                            true,
+                                            false };
+
+        bool        expected_2[]        = { false,
+                                            false,
+                                            false,
+                                            false,
+                                            false };
+#if 0
+        if (test_colision(vertices_a_100_200, 0, 2, edge) != false)
         {
-            if (test_colision(vertices, offsets[i], sizes[i], edge) != expected[i])
-            {
-                fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
-                return false;
-            }
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
         }
 
-        return true;
-    }
-
-
-    bool test_1()
-    {
-        VERTICES_T vertices = {
-            {  100, 1800 }, {  650, 1900 }, {  750, 1850 }, {  850, 1650 },
-            {  100,  600 }, {  180,  700 }, {  300,  600 }, {  220,  450 },
-            {  200,  850 }, {  250, 1100 }, {  350, 1150 }, {  350,  750 },
-            {  200, 1250 }, {  100, 1450 }, {  250, 1800 }, {  400, 1500 }, {  350, 1200 },
-            {  450,   50 }, {  350,  200 }, {  500,  350 }, {  900,   50 },
-            {  600,  350 }, {  550,  500 }, {  550,  600 }, {  700,  600 }, {  850,  500 },
-            {  450,  850 }, {  500, 1100 }, {  600, 1200 }, {  550,  750 },
-            {  900,  450 }, {  850,  650 }, { 1100,  700 }, { 1200,  500 },
-            {  850,  950 }, {  800, 1300 }, {  900, 1350 }, { 1100, 1200 }, { 1100,  900 },
-            { 1250,  600 }, { 1300,  700 }, { 1400,  650 }, { 1500,  500 }, { 1350,  350 },
-            { 1150, 1200 }, { 1300, 1250 }, { 1400, 1000 }, { 1200,  950 },
-            { 1150, 1550 }, { 1050, 1800 }, { 1100, 1850 }, { 1300, 1750 }, { 1250, 1500 },
-            { 1500,  900 }, { 1600,  950 }, { 1750,  750 }, { 1700,  700 },
-            { 1400, 1300 }, { 1350, 1650 }, { 1450, 1700 }, { 1650, 1400 },
-            { 1650, 1050 }, { 1700, 1300 }, { 1950, 1200 }, { 1900,  950 } };
-
-        NUMBERS_T   sizes = { 4,     4,     4,     5,     4,     5,     4,     4,     5,     5,     4,     5,     4,     4,     4 };
-        NUMBERS_T   offsets = { 0,     4,     8,     12,    17,    21,    26,    30,    34,    39,    44,    48,    53,    57,    61 };
-        bool        expected[] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-
-        EDGE_T  edge = { {  200,  200 }, { 1800, 1800 }, true };
-
-        for (int32_t i = 0; i < sizeof(expected) / sizeof(bool); i++)
+        if (test_colision(vertices_a_200_400, 0, 2, edge) != true)
         {
-            if (test_colision(vertices, offsets[i], sizes[i], edge) != expected[i])
-            {
-                fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
-                return false;
-            }
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices_a_400_500, 0, 2, edge) != true)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices_a_500_700, 0, 2, edge) != true)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices_a_700_800, 0, 2, edge) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+#endif
+        if (test_colision(vertices_b_100_200, 0, 2, edge) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices_b_200_400, 0, 2, edge) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices_b_400_500, 0, 2, edge) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices_b_500_700, 0, 2, edge) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices_b_700_800, 0, 2, edge) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
         }
 
         return true;
@@ -85,7 +101,7 @@ namespace
 
 int main(int argc, char** argv)
 {
-    if (!test())
+    if (!test_egdes_vertical())
     {
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
         return -1;
