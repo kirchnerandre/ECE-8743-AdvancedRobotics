@@ -88,11 +88,11 @@ namespace
 
     bool test_first_egde_vertical()
     {
-        VERTICES_T  vertices_100_200  = { { 100, 200 }, { 100, 400 } };
+        VERTICES_T  vertices_100_200    = { { 100, 200 }, { 100, 400 } };
 
-        EDGE_T      edge_above        = { { 0,   0   }, { 200, 300 }, false };
-        EDGE_T      edge_middle       = { { 0,   300 }, { 200, 300 }, false };
-        EDGE_T      edge_bellow       = { { 0,   600 }, { 200, 300 }, false };
+        EDGE_T      edge_above          = { { 0,   0   }, { 200, 300 }, false };
+        EDGE_T      edge_middle         = { { 0,   300 }, { 200, 300 }, false };
+        EDGE_T      edge_bellow         = { { 0,   600 }, { 200, 300 }, false };
 
         if (test_colision(vertices_100_200, 0, 2, edge_above) != false)
         {
@@ -111,6 +111,7 @@ namespace
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
+
         return true;
     }
 
@@ -143,6 +144,29 @@ namespace
 
         return true;
     }
+
+
+    bool test_none_egde_vertical()
+    {
+        VERTICES_T  vertices_ab         = { { 100, 100 }, { 200, 200 } };
+
+        EDGE_T      edge_cd_through     = { { 200, 100 }, { 100, 200 }, false };
+        EDGE_T      edge_cd_through_not = { { 300, 100 }, { 400, 200 }, false };
+
+        if (test_colision(vertices_ab, 0, 2, edge_cd_through_not) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices_ab, 0, 2, edge_cd_through) != true)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        return true;
+    }
 }
 
 
@@ -154,21 +178,26 @@ int main(int argc, char** argv)
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
         return -1;
     }
-#endif
-#if 0
+
     if (!test_first_egde_vertical())
     {
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
         return -1;
     }
-#endif
-#if 1
+
     if (!test_second_egde_vertical())
     {
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
         return -1;
     }
 #endif
+
+    if (!test_none_egde_vertical())
+    {
+        fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
+        return -1;
+    }
+
     printf("Helloe owlrd\n");
 
     return 0;

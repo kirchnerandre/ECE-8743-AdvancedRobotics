@@ -106,6 +106,9 @@ namespace
         }
         else
         {
+            int32_t x_c = VertexC.X <= VertexD.X ? VertexC.X : VertexD.X;
+            int32_t x_d = VertexC.X >  VertexD.X ? VertexC.X : VertexD.X;
+
             float m_ab  = static_cast<float>(VertexB.Y - VertexA.Y)
                         / static_cast<float>(VertexB.X - VertexA.X);
 
@@ -118,11 +121,7 @@ namespace
 
             float x     = - (n_cd - n_ab) / (m_cd - m_ab);
 
-            if ((VertexA.X <= VertexB.X) && (VertexA.X <= x) && (x <= VertexB.X))
-            {
-                return true;
-            }
-            else if ((VertexB.X < VertexA.X) && (VertexB.X <= x) && (x <= VertexA.X))
+            if ((x_c <= x) && (x <= x_d))
             {
                 return true;
             }
@@ -153,11 +152,9 @@ bool test_colision(VERTICES_T& Vertices, int32_t Offset, int32_t Size, EDGE_T& E
 
         if (test_edges_colision(Vertices[offset_c], Vertices[offset_d], Edge.VertexA, Edge.VertexB))
         {
-            printf("true\n");
             return true;
         }
     }
 
-    printf("false\n");
     return false;
 }
