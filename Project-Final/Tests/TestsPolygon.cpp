@@ -167,12 +167,86 @@ namespace
 
         return true;
     }
+
+
+    bool test_edge_inside_polygon()
+    {
+        VERTICES_T  vertices    = { { 100, 100 }, { 200, 100 }, { 200, 200 }, { 100, 200 },
+                                    { 500, 100 }, { 600, 100 }, { 600, 200 }, { 500, 200 } };
+
+        EDGE_T      edge_1      = { { 10,  10  }, { 20,  20  }, false };
+        EDGE_T      edge_2      = { { 110, 150 }, { 120, 160 }, false };
+        EDGE_T      edge_3      = { { 180, 110 }, { 190, 120 }, false };
+        EDGE_T      edge_4      = { { 510, 150 }, { 520, 150 }, false };
+        EDGE_T      edge_5      = { { 580, 110 }, { 590, 120 }, false };
+
+        if (test_colision(vertices, 0, 4, edge_1) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices, 0, 4, edge_2) != true)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices, 0, 4, edge_3) != true)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices, 0, 4, edge_4) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices, 0, 4, edge_5) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices, 4, 8, edge_1) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices, 4, 8, edge_2) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices, 4, 8, edge_3) != false)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices, 4, 8, edge_4) != true)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        if (test_colision(vertices, 4, 8, edge_5) != true)
+        {
+            fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
+
+        return true;
+    }
 }
 
 
 int main(int argc, char** argv)
 {
-#if 0
     if (!test_both_egdes_vertical())
     {
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
@@ -190,7 +264,6 @@ int main(int argc, char** argv)
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
         return -1;
     }
-#endif
 
     if (!test_none_egde_vertical())
     {
@@ -198,7 +271,11 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    printf("Helloe owlrd\n");
+    if (!test_edge_inside_polygon())
+    {
+        fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
+        return -1;
+    }
 
     return 0;
 }
