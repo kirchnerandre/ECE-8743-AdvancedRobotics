@@ -7,6 +7,7 @@
 
 namespace
 {
+    constexpr int32_t max_threads   = 32;
     constexpr int32_t max_vertices  = 1024;
     constexpr int32_t max_polygons  = 32;
 
@@ -241,18 +242,14 @@ namespace
     __global__ void gpu_test_colision(BOOL_T* Statuses, VERTEX_T* VerticesData, NUMBER_T* PolygonsBegin, NUMBER_T* PolygonsEnd, EDGE_T* Edge, size_t VerticesSize, size_t PolygonsSize)
     {
         __shared__ VERTEX_T vertices[max_vertices];
-        __shared__ BOOL_T   statuses[max_polygons];
 
         int32_t x = threadIdx.x;
 
-        for (int32_t i = 0; i < max_vertices / max_polygons; i++ )
+        for (int32_t i = 0; i < max_vertices / max_threads; i += max_threads)
         {
-            if (x + i >= VerticesSize)
+            if (x + i < VerticesSize)
             {
-                break;
-            }
-            else
-            {
+printf("%d\n", x + i);
                 vertices[x + i] = VerticesData[x + i];
             }
         }
@@ -264,8 +261,11 @@ namespace
             int32_t polygon_begin = PolygonsBegin[x];
             int32_t polygon_end   = PolygonsEnd  [x];
 
-            statuses[x] = test_colision(vertices, polygon_begin, polygon_end, Edge);
+            Statuses[x] = test_colision(vertices, polygon_begin, polygon_end, Edge);
+printf("%d %d\n", x, Statuses[x]);
         }
+
+        __syncthreads();
     }
 }
 
@@ -347,7 +347,7 @@ bool test_colision(BOOL_T* Statuses, NUMBER_T* PolygonsBegin, NUMBER_T* Polygons
 
     gpu_test_colision<<<blocks, threads>>>(gpu_statuses, gpu_vertices, gpu_polygons_begin, gpu_polygons_end, gpu_edge, VerticesSize, PolygonsSize);
 
-    if (cudaMemcpy(Statuses, gpu_statuses, PolygonsSize * sizeof(NUMBER_T), cudaMemcpyDeviceToHost))
+    if (cudaMemcpy(Statuses, gpu_statuses, PolygonsSize * sizeof(BOOL_T), cudaMemcpyDeviceToHost))
     {
         fprintf(stderr, "%s:%d:%s: Failed to copy memory\n", __FILE__, __LINE__, __FUNCTION__);
         ret_val = false;

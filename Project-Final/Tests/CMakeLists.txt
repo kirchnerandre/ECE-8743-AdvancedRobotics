@@ -10,6 +10,12 @@ target_link_libraries       (TestsPolygonCpu    PRIVATE ProjectFinal)
 target_include_directories  (TestsPolygonCpu    PRIVATE ../Headers)
 add_test                    (TestsPolygonCpu    TestsPolygonCpu)
 
+add_executable              (TestsPolygonGpu    TestsPolygonGpu.cpp)
+target_link_libraries       (TestsPolygonGpu    PRIVATE ProjectFinal)
+target_include_directories  (TestsPolygonGpu    PRIVATE ../Headers)
+add_test                    (TestsPolygonGpu    TestsPolygonGpu)
+
+
 add_executable              (TestsPrinter       TestsPrinter.cpp)
 target_link_libraries       (TestsPrinter       PRIVATE ProjectFinal)
 target_include_directories  (TestsPrinter       PRIVATE ../Headers)
