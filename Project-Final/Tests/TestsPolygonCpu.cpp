@@ -276,6 +276,6 @@ int main(int argc, char** argv)
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
         return -1;
     }
-printf("DONE!!!\n");
+
     return 0;
 }

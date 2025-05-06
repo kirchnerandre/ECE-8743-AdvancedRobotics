@@ -161,45 +161,6 @@ namespace
     }
 
 
-    bool test_edge_inside_polygon(VERTEX_T& VertexA, VERTEX_T& VertexB, VERTICES_T& Vertices, int32_t PolygonBegin, int32_t PolygonEnd)
-    {
-        int32_t vertex_o = PolygonBegin;
-
-        for (int32_t vertex_j = vertex_o + 2; vertex_j < PolygonEnd; vertex_j++)
-        {
-            int32_t vertex_i = vertex_j - 1;
-
-            int32_t oi_x_oa = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], VertexA);
-            int32_t ij_x_ia = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], VertexA);
-            int32_t jo_x_ja = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], VertexA);
-
-            if ((oi_x_oa >= 0) && (ij_x_ia >= 0) && (jo_x_ja >= 0))
-            {
-                return true;
-            }
-            else if ((oi_x_oa <= 0) && (ij_x_ia <= 0) && (jo_x_ja <= 0))
-            {
-                return true;
-            }
-
-            int32_t oi_x_ob = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], VertexB);
-            int32_t ij_x_ib = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], VertexB);
-            int32_t jo_x_jb = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], VertexB);
-
-            if ((oi_x_ob >= 0) && (ij_x_ib >= 0) && (jo_x_jb >= 0))
-            {
-                return true;
-            }
-            else if ((oi_x_ob <= 0) && (ij_x_ib <= 0) && (jo_x_jb <= 0))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
     bool test_edge_inside_polygon(VERTEX_T& VertexA, VERTEX_T& VertexB, VERTEX_T* Vertices, int32_t PolygonBegin, int32_t PolygonEnd)
     {
         int32_t vertex_o = PolygonBegin;
@@ -237,39 +198,6 @@ namespace
 
         return false;
     }
-}
-
-
-bool test_colision(VERTICES_T& Vertices, NUMBER_T PolygonBegin, NUMBER_T PolygonEnd, EDGE_T& Edge)
-{
-    for (int32_t i = PolygonBegin; i < PolygonEnd; i++)
-    {
-        int32_t offset_c = -1;
-        int32_t offset_d = -1;
-
-        if (i == PolygonEnd - 1)
-        {
-            offset_c = i;
-            offset_d = PolygonBegin;
-        }
-        else
-        {
-            offset_c = i;
-            offset_d = i + 1;
-        }
-
-        if (test_edges_colision(Vertices[offset_c], Vertices[offset_d], Edge.VertexA, Edge.VertexB))
-        {
-            return true;
-        }
-    }
-
-    if (test_edge_inside_polygon(Edge.VertexA, Edge.VertexB, Vertices, PolygonBegin, PolygonEnd))
-    {
-        return true;
-    }
-
-    return false;
 }
 
 
