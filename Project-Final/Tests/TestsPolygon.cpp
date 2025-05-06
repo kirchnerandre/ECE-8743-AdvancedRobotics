@@ -8,19 +8,19 @@ namespace
 {
     bool test_both_egdes_vertical()
     {
-        VERTICES_T  vertices_a_100_200  = { { 100, 100 }, { 100, 200 } };
-        VERTICES_T  vertices_a_200_400  = { { 100, 200 }, { 100, 400 } };
-        VERTICES_T  vertices_a_400_500  = { { 100, 400 }, { 100, 500 } };
-        VERTICES_T  vertices_a_500_700  = { { 100, 500 }, { 100, 700 } };
-        VERTICES_T  vertices_a_700_800  = { { 100, 700 }, { 100, 800 } };
+        VERTEX_T    vertices_a_100_200[]    = { { 100, 100 }, { 100, 200 } };
+        VERTEX_T    vertices_a_200_400[]    = { { 100, 200 }, { 100, 400 } };
+        VERTEX_T    vertices_a_400_500[]    = { { 100, 400 }, { 100, 500 } };
+        VERTEX_T    vertices_a_500_700[]    = { { 100, 500 }, { 100, 700 } };
+        VERTEX_T    vertices_a_700_800[]    = { { 100, 700 }, { 100, 800 } };
 
-        VERTICES_T  vertices_b_100_200  = { { 200, 100 }, { 200, 200 } };
-        VERTICES_T  vertices_b_200_400  = { { 200, 200 }, { 200, 400 } };
-        VERTICES_T  vertices_b_400_500  = { { 200, 400 }, { 200, 500 } };
-        VERTICES_T  vertices_b_500_700  = { { 200, 500 }, { 200, 700 } };
-        VERTICES_T  vertices_b_700_800  = { { 200, 700 }, { 200, 800 } };
+        VERTEX_T    vertices_b_100_200[]    = { { 200, 100 }, { 200, 200 } };
+        VERTEX_T    vertices_b_200_400[]    = { { 200, 200 }, { 200, 400 } };
+        VERTEX_T    vertices_b_400_500[]    = { { 200, 400 }, { 200, 500 } };
+        VERTEX_T    vertices_b_500_700[]    = { { 200, 500 }, { 200, 700 } };
+        VERTEX_T    vertices_b_700_800[]    = { { 200, 700 }, { 200, 800 } };
 
-        EDGE_T      edge                = { { 100, 300 }, { 100, 600 }, false };
+        EDGE_T      edge                    = { { 100, 300 }, { 100, 600 }, false };
 
         if (test_colision(vertices_a_100_200, 0, 2, edge) != false)
         {
@@ -88,7 +88,7 @@ namespace
 
     bool test_first_egde_vertical()
     {
-        VERTICES_T  vertices_100_200    = { { 100, 200 }, { 100, 400 } };
+        VERTEX_T    vertices_100_200[]  = { { 100, 200 }, { 100, 400 } };
 
         EDGE_T      edge_above          = { { 0,   0   }, { 200, 300 }, false };
         EDGE_T      edge_middle         = { { 0,   300 }, { 200, 300 }, false };
@@ -118,11 +118,11 @@ namespace
 
     bool test_second_egde_vertical()
     {
-        VERTICES_T  vertices_100_200_above  = { { 0,   300 }, { 200, 0   } };
-        VERTICES_T  vertices_100_200_middle = { { 0,   300 }, { 200, 300 } };
-        VERTICES_T  vertices_100_200_bellow = { { 0,   300 }, { 200, 600 } };
+        VERTEX_T    vertices_100_200_above []   = { { 0,   300 }, { 200, 0   } };
+        VERTEX_T    vertices_100_200_middle[]   = { { 0,   300 }, { 200, 300 } };
+        VERTEX_T    vertices_100_200_bellow[]   = { { 0,   300 }, { 200, 600 } };
 
-        EDGE_T      edge                    = { { 100, 200 }, { 100, 400 }, false };
+        EDGE_T      edge                        = { { 100, 200 }, { 100, 400 }, false };
 
         if (test_colision(vertices_100_200_above, 0, 2, edge) != false)
         {
@@ -148,7 +148,7 @@ namespace
 
     bool test_none_egde_vertical()
     {
-        VERTICES_T  vertices_ab         = { { 100, 100 }, { 200, 200 } };
+        VERTEX_T    vertices_ab[]       = { { 100, 100 }, { 200, 200 } };
 
         EDGE_T      edge_cd_through     = { { 200, 100 }, { 100, 200 }, false };
         EDGE_T      edge_cd_through_not = { { 300, 100 }, { 400, 200 }, false };
@@ -171,7 +171,7 @@ namespace
 
     bool test_edge_inside_polygon()
     {
-        VERTICES_T  vertices    = { { 100, 100 }, { 200, 100 }, { 200, 200 }, { 100, 200 },
+        VERTEX_T    vertices[]  = { { 100, 100 }, { 200, 100 }, { 200, 200 }, { 100, 200 },
                                     { 500, 100 }, { 600, 100 }, { 600, 200 }, { 500, 200 } };
 
         EDGE_T      edge_1      = { { 10,  10  }, { 20,  20  }, false };
@@ -276,6 +276,6 @@ int main(int argc, char** argv)
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
         return -1;
     }
-
+printf("DONE!!!\n");
     return 0;
 }
