@@ -40,6 +40,7 @@ namespace
             }
             else
             {
+printf("--0--\n");
                 int32_t y_a = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
                 int32_t y_b = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
 
@@ -70,6 +71,7 @@ namespace
         }
         else if (VertexA.X == VertexB.X)
         {
+printf("--1-- (%5d, %5d) (%5d, %5d)\n", VertexA.X, VertexB.X, VertexA.Y, VertexB.Y);
             int32_t y_a = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
             int32_t y_b = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
 
@@ -94,6 +96,7 @@ namespace
         }
         else if (VertexC.X == VertexD.X)
         {
+printf("--2--\n");
             int32_t y_a = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
             int32_t y_b = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
 
@@ -118,6 +121,7 @@ namespace
         }
         else
         {
+printf("--3--\n");
             int32_t x_a = VertexA.X <= VertexB.X ? VertexA.X : VertexB.X;
             int32_t x_b = VertexA.X >  VertexB.X ? VertexA.X : VertexB.X;
 
@@ -208,11 +212,12 @@ namespace
 
     __device__ bool test_colision(VERTEX_T* Vertices, NUMBER_T PolygonBegin, NUMBER_T PolygonEnd, EDGE_T* Edge)
     {
+printf("A   %d %d %d\n", threadIdx.x, PolygonBegin, PolygonEnd);
         for (int32_t i = PolygonBegin; i < PolygonEnd; i++)
         {
             int32_t offset_c = -1;
             int32_t offset_d = -1;
-    
+
             if (i == PolygonEnd - 1)
             {
                 offset_c = i;
@@ -223,15 +228,17 @@ namespace
                 offset_c = i;
                 offset_d = i + 1;
             }
-    
+printf("AA  %d true %d %d (%5d, %5d) (%5d, %5d)\n", threadIdx.x, offset_c, offset_d, Vertices[offset_c].X, Vertices[offset_c].X, Vertices[offset_d].Y, Vertices[offset_d].Y);
             if (test_edges_colision(Vertices[offset_c], Vertices[offset_d], Edge->VertexA, Edge->VertexB))
             {
+printf("AAA %d true %d %d (%5d, %5d) (%5d, %5d)\n", threadIdx.x, offset_c, offset_d, Vertices[offset_c].X, Vertices[offset_c].X, Vertices[offset_d].Y, Vertices[offset_d].Y);
                 return true;
             }
         }
-    
+
         if (test_edge_inside_polygon(Edge->VertexA, Edge->VertexB, Vertices, PolygonBegin, PolygonEnd))
         {
+printf("BBB %d true\n", threadIdx.x);
             return true;
         }
 
@@ -249,7 +256,7 @@ namespace
         {
             if (x + i < VerticesSize)
             {
-printf("%d\n", x + i);
+printf("%2d (%5d,%5d)\n", x + i, VerticesData[x + i].X, VerticesData[x + i].Y);
                 vertices[x + i] = VerticesData[x + i];
             }
         }
@@ -272,6 +279,8 @@ printf("%d %d\n", x, Statuses[x]);
 
 bool test_colision(BOOL_T* Statuses, NUMBER_T* PolygonsBegin, NUMBER_T* PolygonsEnd, VERTEX_T* Vertices, EDGE_T& Edge, size_t VerticesSize, size_t PolygonsSize)
 {
+printf("-- %d %d --\n", VerticesSize, PolygonsSize);
+
     bool        ret_val             = true;
     BOOL_T*     gpu_statuses        = nullptr;
     NUMBER_T*   gpu_polygons_begin  = nullptr;
