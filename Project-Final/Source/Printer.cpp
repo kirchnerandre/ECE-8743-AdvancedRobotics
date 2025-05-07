@@ -16,7 +16,7 @@ namespace
     };
 
 
-    void scale(BORDERS_T& Borders, VERTEX_T& Begin, VERTEX_T& End, EDGES_T& Edges)
+    void scale(BORDERS_T& Borders, VERTICES_T& Vertices, VERTEX_T& Begin, VERTEX_T& End)
     {
         constexpr float     final_margin    = 0.05f;
         constexpr int32_t   final_width     = 1000;
@@ -33,39 +33,30 @@ namespace
         initial_y_min = End.Y < initial_y_min ? End.Y : initial_y_min;
         initial_y_max = End.Y > initial_y_max ? End.Y : initial_y_max;
 
-        for (IEDGE_T i = Edges.begin(); i != Edges.end(); i++)
+        for (size_t i = 0u; i < Vertices.size(); i++)
         {
-            initial_x_min = i->VertexA.X < initial_x_min ? i->VertexA.X : initial_x_min;
-            initial_x_max = i->VertexA.X > initial_x_max ? i->VertexA.X : initial_x_max;
+            initial_x_min = Vertices[i].X < initial_x_min ? Vertices[i].X : initial_x_min;
+            initial_x_max = Vertices[i].X > initial_x_max ? Vertices[i].X : initial_x_max;
 
-            initial_x_min = i->VertexB.X < initial_x_min ? i->VertexB.X : initial_x_min;
-            initial_x_max = i->VertexB.X > initial_x_max ? i->VertexB.X : initial_x_max;
-
-            initial_y_min = i->VertexA.Y < initial_y_min ? i->VertexA.Y : initial_y_min;
-            initial_y_max = i->VertexA.Y > initial_y_max ? i->VertexA.Y : initial_y_max;
-
-            initial_y_min = i->VertexB.Y < initial_y_min ? i->VertexB.Y : initial_y_min;
-            initial_y_max = i->VertexB.Y > initial_y_max ? i->VertexB.Y : initial_y_max;
+            initial_y_min = Vertices[i].Y < initial_y_min ? Vertices[i].Y : initial_y_min;
+            initial_y_max = Vertices[i].Y > initial_y_max ? Vertices[i].Y : initial_y_max;
         }
 
-        int32_t final_height    = static_cast<float>(initial_y_max - initial_y_min) / (initial_x_max - initial_x_min) * final_width + 0.5f;
+        int32_t final_height    = static_cast<float>(initial_y_max - initial_y_min) / (initial_x_max - initial_x_min) * final_width;
 
-        int32_t final_y_min     = static_cast<float>(final_height) *          final_margin  + 0.5f;
-        int32_t final_y_max     = static_cast<float>(final_height) * ( 1.0f - final_margin) + 0.5f;
+        int32_t final_y_min     = static_cast<float>(final_height) *          final_margin;
+        int32_t final_y_max     = static_cast<float>(final_height) * ( 1.0f - final_margin);
 
-        Begin.X = final_x_min + static_cast<float>((Begin.X - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min) + 0.5f;
-        Begin.Y = final_y_min + static_cast<float>((Begin.Y - initial_y_min) * (final_y_max - final_y_min)) / (initial_y_max - initial_y_min) + 0.5f;
+        Begin.X = final_x_min + static_cast<float>((Begin.X - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min);
+        Begin.Y = final_y_min + static_cast<float>((Begin.Y - initial_y_min) * (final_y_max - final_y_min)) / (initial_y_max - initial_y_min);
 
-        End.Y   = final_y_min + static_cast<float>((End.Y   - initial_y_min) * (final_y_max - final_y_min)) / (initial_y_max - initial_y_min) + 0.5f;
-        End.X   = final_x_min + static_cast<float>((End.X   - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min) + 0.5f;
+        End.Y   = final_y_min + static_cast<float>((End.Y   - initial_y_min) * (final_y_max - final_y_min)) / (initial_y_max - initial_y_min);
+        End.X   = final_x_min + static_cast<float>((End.X   - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min);
 
-        for (IEDGE_T i = Edges.begin(); i != Edges.end(); i++)
+        for (size_t i = 0u; i < Vertices.size(); i++)
         {
-            i->VertexA.X = final_x_min + static_cast<float>((i->VertexA.X - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min) + 0.5f;
-            i->VertexB.X = final_x_min + static_cast<float>((i->VertexB.X - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min) + 0.5f;
-
-            i->VertexA.Y = final_y_min + static_cast<float>((i->VertexA.Y - initial_y_min) * (final_y_max - final_y_min)) / (initial_y_max - initial_y_min) + 0.5f;
-            i->VertexB.Y = final_y_min + static_cast<float>((i->VertexB.Y - initial_y_min) * (final_y_max - final_y_min)) / (initial_y_max - initial_y_min) + 0.5f;
+            Vertices[i].X = final_x_min + static_cast<float>((Vertices[i].X - initial_x_min) * (final_x_max - final_x_min)) / (initial_x_max - initial_x_min);
+            Vertices[i].Y = final_y_min + static_cast<float>((Vertices[i].Y - initial_y_min) * (final_y_max - final_y_min)) / (initial_y_max - initial_y_min);
         }
 
         Borders = { 0, final_width, 0, final_height };
@@ -110,24 +101,24 @@ namespace
     }
 
 
-    void draw_edge_vertical_pure(uint8_t* Canvas, BORDERS_T& Borders, EDGE_T& Edge)
+    void draw_edge_vertical_pure(uint8_t* Canvas, BORDERS_T& Borders, VERTICES_T& Vertices, EDGE_T& Edge)
     {
         int32_t channels    = 3;
         float   radius      = 2.0f;
         float   y_initial   = 0.0f;
         float   y_final     = 0.0f;
         float   y_step      = 1.0f;
-        float   x           = Edge.VertexB.X;
+        float   x           = Vertices[Edge.IndexB].X;
 
-        if (Edge.VertexA.Y < Edge.VertexB.Y)
+        if (Vertices[Edge.IndexA].Y < Vertices[Edge.IndexB].Y)
         {
-            y_initial   = Edge.VertexA.Y;
-            y_final     = Edge.VertexB.Y;
+            y_initial   = Vertices[Edge.IndexA].Y;
+            y_final     = Vertices[Edge.IndexB].Y;
         }
         else
         {
-            y_initial   = Edge.VertexB.Y;
-            y_final     = Edge.VertexA.Y;
+            y_initial   = Vertices[Edge.IndexB].Y;
+            y_final     = Vertices[Edge.IndexA].Y;
         }
 
         for (float y = y_initial; y <= y_final; y += y_step)
@@ -157,7 +148,7 @@ namespace
     }
 
 
-    void draw_edge_vertical_more(uint8_t* Canvas, BORDERS_T& Borders, EDGE_T& Edge)
+    void draw_edge_vertical_more(uint8_t* Canvas, BORDERS_T& Borders, VERTICES_T& Vertices, EDGE_T& Edge)
     {
         int32_t channels    = 3;
         float   radius      = 2.0f;
@@ -168,19 +159,19 @@ namespace
         float   x_step      = 0.0f;
         float   y_step      = 1.0f;
 
-        if (Edge.VertexA.Y < Edge.VertexB.Y)
+        if (Vertices[Edge.IndexA].Y < Vertices[Edge.IndexB].Y)
         {
-            x_initial   = Edge.VertexA.X;
-            x_final     = Edge.VertexB.X;
-            y_initial   = Edge.VertexA.Y;
-            y_final     = Edge.VertexB.Y;
+            x_initial   = Vertices[Edge.IndexA].X;
+            x_final     = Vertices[Edge.IndexB].X;
+            y_initial   = Vertices[Edge.IndexA].Y;
+            y_final     = Vertices[Edge.IndexB].Y;
         }
         else
         {
-            x_initial   = Edge.VertexB.X;
-            x_final     = Edge.VertexA.X;
-            y_initial   = Edge.VertexB.Y;
-            y_final     = Edge.VertexA.Y;
+            x_initial   = Vertices[Edge.IndexB].X;
+            x_final     = Vertices[Edge.IndexA].X;
+            y_initial   = Vertices[Edge.IndexB].Y;
+            y_final     = Vertices[Edge.IndexA].Y;
         }
 
         float   x = x_initial;
@@ -218,7 +209,7 @@ namespace
     }
 
 
-    void draw_edge_horizontal_more(uint8_t* Canvas, BORDERS_T& Borders, EDGE_T& Edge)
+    void draw_edge_horizontal_more(uint8_t* Canvas, BORDERS_T& Borders, VERTICES_T& Vertices, EDGE_T& Edge)
     {
         int32_t channels    = 3;
         float   radius      = 2.0f;
@@ -229,19 +220,19 @@ namespace
         float   x_step      = 1.0f;
         float   y_step      = 0.0f;
 
-        if (Edge.VertexA.X < Edge.VertexB.X)
+        if (Vertices[Edge.IndexA].X < Vertices[Edge.IndexB].X)
         {
-            x_initial   = Edge.VertexA.X;
-            x_final     = Edge.VertexB.X;
-            y_initial   = Edge.VertexA.Y;
-            y_final     = Edge.VertexB.Y;
+            x_initial   = Vertices[Edge.IndexA].X;
+            x_final     = Vertices[Edge.IndexB].X;
+            y_initial   = Vertices[Edge.IndexA].Y;
+            y_final     = Vertices[Edge.IndexB].Y;
         }
         else
         {
-            x_initial   = Edge.VertexB.X;
-            x_final     = Edge.VertexA.X;
-            y_initial   = Edge.VertexB.Y;
-            y_final     = Edge.VertexA.Y;
+            x_initial   = Vertices[Edge.IndexB].X;
+            x_final     = Vertices[Edge.IndexA].X;
+            y_initial   = Vertices[Edge.IndexB].Y;
+            y_final     = Vertices[Edge.IndexA].Y;
         }
 
         float   x = x_initial;
@@ -279,22 +270,24 @@ namespace
     }
 
 
-    void draw_edge(uint8_t* Canvas, BORDERS_T& Borders, EDGE_T& Edge)
+    void draw_edge(uint8_t* Canvas, BORDERS_T& Borders, VERTICES_T& Vertices, EDGE_T& Edge)
     {
-        int32_t delta_x = Edge.VertexA.X - Edge.VertexB.X >= 0 ? Edge.VertexA.X - Edge.VertexB.X : Edge.VertexB.X - Edge.VertexA.X;
-        int32_t delta_y = Edge.VertexA.Y - Edge.VertexB.Y >= 0 ? Edge.VertexA.Y - Edge.VertexB.Y : Edge.VertexB.Y - Edge.VertexA.Y;
+        int32_t delta_x =   Vertices[Edge.IndexA].X - Vertices[Edge.IndexB].X >= 0 ?
+                            Vertices[Edge.IndexA].X - Vertices[Edge.IndexB].X : Vertices[Edge.IndexB].X - Vertices[Edge.IndexA].X;
+        int32_t delta_y =   Vertices[Edge.IndexA].Y - Vertices[Edge.IndexB].Y >= 0 ?
+                            Vertices[Edge.IndexA].Y - Vertices[Edge.IndexB].Y : Vertices[Edge.IndexB].Y - Vertices[Edge.IndexA].Y;
 
         if (delta_x == 0)
         {
-            draw_edge_vertical_pure(Canvas, Borders, Edge);
+            draw_edge_vertical_pure(Canvas, Borders, Vertices, Edge);
         }
         else if (delta_y >= delta_x)
         {
-            draw_edge_vertical_more(Canvas, Borders, Edge);
+            draw_edge_vertical_more(Canvas, Borders, Vertices, Edge);
         }
         else // if (delta_x < delta_y)
         {
-            draw_edge_horizontal_more(Canvas, Borders, Edge);
+            draw_edge_horizontal_more(Canvas, Borders, Vertices, Edge);
         }
     }
 }
@@ -302,6 +295,7 @@ namespace
 
 bool print(
     std::string&    Filename,
+    VERTICES_T&     Vertices,
     VERTEX_T&       Begin,
     VERTEX_T&       End,
     EDGES_T&        Edges)
@@ -314,7 +308,7 @@ bool print(
     int32_t             height      = 0;
     BORDERS_T           borders{};
 
-    scale(borders, Begin, End, Edges);
+    scale(borders, Vertices, Begin, End);
 
     height = borders.YMax - borders.YMin;
     width  = borders.XMax - borders.XMin;
@@ -326,7 +320,7 @@ bool print(
 
     for (IEDGE_T i = Edges.begin(); i != Edges.end(); i++)
     {
-        draw_edge(canvas, borders, *i);
+        draw_edge(canvas, borders, Vertices, *i);
     }
 
     FILE* file = nullptr;

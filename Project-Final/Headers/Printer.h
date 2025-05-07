@@ -8,6 +8,7 @@
 
 bool print(
     std::string&    Filename,
+    VERTICES_T&     Vertices,
     VERTEX_T&       Begin,
     VERTEX_T&       End,
     EDGES_T&        Edges);
