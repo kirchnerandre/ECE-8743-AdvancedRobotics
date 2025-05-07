@@ -3,6 +3,6 @@
 
 #include "DataTypes.h"
 
-bool test_colision(VERTEX_T*   Vertices, NUMBER_T PolygonBegin, NUMBER_T PolygonEnd, EDGE_T& Edge);
+bool test_colision(VERTEX_T* Vertices, NUMBER_T PolygonBegin, NUMBER_T PolygonEnd, EDGE_T& Edge);
 
 #endif // _POLYGON_CPU_

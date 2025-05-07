@@ -8,75 +8,69 @@ namespace
 {
     bool test_both_egdes_vertical()
     {
-        VERTEX_T    vertices_a_100_200[]    = { { 100, 100 }, { 100, 200 } };
-        VERTEX_T    vertices_a_200_400[]    = { { 100, 200 }, { 100, 400 } };
-        VERTEX_T    vertices_a_400_500[]    = { { 100, 400 }, { 100, 500 } };
-        VERTEX_T    vertices_a_500_700[]    = { { 100, 500 }, { 100, 700 } };
-        VERTEX_T    vertices_a_700_800[]    = { { 100, 700 }, { 100, 800 } };
+        VERTEX_T    vertices[]  = {
+            { 100.0f, 100.0f }, { 100.0f, 200.0f }, { 100.0f, 400.0f }, { 100.0f, 500.0f }, { 100.0f, 700.0f }, { 100.0f, 800.0f },
+            { 200.0f, 100.0f }, { 200.0f, 200.0f }, { 200.0f, 400.0f }, { 200.0f, 500.0f }, { 200.0f, 700.0f }, { 200.0f, 800.0f },
+            { 100.0f, 300.0f }, { 100.0f, 600.0f },
+        };
 
-        VERTEX_T    vertices_b_100_200[]    = { { 200, 100 }, { 200, 200 } };
-        VERTEX_T    vertices_b_200_400[]    = { { 200, 200 }, { 200, 400 } };
-        VERTEX_T    vertices_b_400_500[]    = { { 200, 400 }, { 200, 500 } };
-        VERTEX_T    vertices_b_500_700[]    = { { 200, 500 }, { 200, 700 } };
-        VERTEX_T    vertices_b_700_800[]    = { { 200, 700 }, { 200, 800 } };
+        EDGE_T      edge        = { 12, 13, false };
 
-        EDGE_T      edge                    = { { 100, 300 }, { 100, 600 }, false };
-
-        if (test_colision(vertices_a_100_200, 0, 2, edge) != false)
+        if (test_colision(vertices, 0, 2, edge) != false)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
 
-        if (test_colision(vertices_a_200_400, 0, 2, edge) != true)
+        if (test_colision(vertices, 1, 3, edge) != true)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
 
-        if (test_colision(vertices_a_400_500, 0, 2, edge) != true)
+        if (test_colision(vertices, 2, 4, edge) != true)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
 
-        if (test_colision(vertices_a_500_700, 0, 2, edge) != true)
+        if (test_colision(vertices, 3, 5, edge) != true)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
 
-        if (test_colision(vertices_a_700_800, 0, 2, edge) != false)
+        if (test_colision(vertices, 4, 6, edge) != false)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
 
-        if (test_colision(vertices_b_100_200, 0, 2, edge) != false)
+        if (test_colision(vertices, 6, 8, edge) != false)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
 
-        if (test_colision(vertices_b_200_400, 0, 2, edge) != false)
+        if (test_colision(vertices, 7, 9, edge) != false)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
 
-        if (test_colision(vertices_b_400_500, 0, 2, edge) != false)
+        if (test_colision(vertices, 8, 10, edge) != false)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
 
-        if (test_colision(vertices_b_500_700, 0, 2, edge) != false)
+        if (test_colision(vertices, 9, 11, edge) != false)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
 
-        if (test_colision(vertices_b_700_800, 0, 2, edge) != false)
+        if (test_colision(vertices, 10, 12, edge) != false)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
@@ -88,25 +82,32 @@ namespace
 
     bool test_first_egde_vertical()
     {
-        VERTEX_T    vertices_100_200[]  = { { 100, 200 }, { 100, 400 } };
+        VERTEX_T    vertices[] = {
+            { 100.0f, 200.0f },
+            { 100.0f, 400.0f },
+            { 0.0f,   0.0f   },
+            { 0.0f,   300.0f },
+            { 0.0f,   600.0f },
+            { 200.0f, 300.0f }
+        };
 
-        EDGE_T      edge_above          = { { 0,   0   }, { 200, 300 }, false };
-        EDGE_T      edge_middle         = { { 0,   300 }, { 200, 300 }, false };
-        EDGE_T      edge_bellow         = { { 0,   600 }, { 200, 300 }, false };
+        EDGE_T      edge_above          = { 2, 5, false };
+        EDGE_T      edge_middle         = { 3, 5, false };
+        EDGE_T      edge_bellow         = { 4, 5, false };
 
-        if (test_colision(vertices_100_200, 0, 2, edge_above) != false)
+        if (test_colision(vertices, 0, 2, edge_above) != false)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
 
-        if (test_colision(vertices_100_200, 0, 2, edge_middle) != true)
+        if (test_colision(vertices, 0, 2, edge_middle) != true)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
 
-        if (test_colision(vertices_100_200, 0, 2, edge_bellow) != false)
+        if (test_colision(vertices, 0, 2, edge_bellow) != false)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
@@ -118,11 +119,11 @@ namespace
 
     bool test_second_egde_vertical()
     {
-        VERTEX_T    vertices_100_200_above []   = { { 0,   300 }, { 200, 0   } };
-        VERTEX_T    vertices_100_200_middle[]   = { { 0,   300 }, { 200, 300 } };
-        VERTEX_T    vertices_100_200_bellow[]   = { { 0,   300 }, { 200, 600 } };
+        VERTEX_T    vertices_100_200_above []   = { { 0.0f,   300.0f }, { 200.0f, 0.0f   }, { 100.0f, 200.0f }, { 100.0f, 400.0f } };
+        VERTEX_T    vertices_100_200_middle[]   = { { 0.0f,   300.0f }, { 200.0f, 300.0f }, { 100.0f, 200.0f }, { 100.0f, 400.0f } };
+        VERTEX_T    vertices_100_200_bellow[]   = { { 0.0f,   300.0f }, { 200.0f, 600.0f }, { 100.0f, 200.0f }, { 100.0f, 400.0f } };
 
-        EDGE_T      edge                        = { { 100, 200 }, { 100, 400 }, false };
+        EDGE_T      edge                        = { 2, 3, false };
 
         if (test_colision(vertices_100_200_above, 0, 2, edge) != false)
         {
@@ -148,18 +149,23 @@ namespace
 
     bool test_none_egde_vertical()
     {
-        VERTEX_T    vertices_ab[]       = { { 100, 100 }, { 200, 200 } };
+        VERTEX_T    vertices[]          = { { 100.0f, 100.0f },
+                                            { 200.0f, 200.0f },
+                                            { 200.0f, 100.0f },
+                                            { 100.0f, 200.0f },
+                                            { 300.0f, 100.0f },
+                                            { 400.0f, 200.0f } };
 
-        EDGE_T      edge_cd_through     = { { 200, 100 }, { 100, 200 }, false };
-        EDGE_T      edge_cd_through_not = { { 300, 100 }, { 400, 200 }, false };
+        EDGE_T      edge_cd_through     = { 2, 3, false };
+        EDGE_T      edge_cd_through_not = { 4, 5, false };
 
-        if (test_colision(vertices_ab, 0, 2, edge_cd_through_not) != false)
+        if (test_colision(vertices, 0, 2, edge_cd_through_not) != false)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
 
-        if (test_colision(vertices_ab, 0, 2, edge_cd_through) != true)
+        if (test_colision(vertices, 0, 2, edge_cd_through) != true)
         {
             fprintf(stderr, "%s:%d:%s: Incorrect collision test output\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
@@ -172,13 +178,18 @@ namespace
     bool test_edge_inside_polygon()
     {
         VERTEX_T    vertices[]  = { { 100, 100 }, { 200, 100 }, { 200, 200 }, { 100, 200 },
-                                    { 500, 100 }, { 600, 100 }, { 600, 200 }, { 500, 200 } };
+                                    { 500, 100 }, { 600, 100 }, { 600, 200 }, { 500, 200 },
+                                    { 10,  10  }, { 20,  20  },
+                                    { 110, 150 }, { 120, 160 },
+                                    { 180, 110 }, { 190, 120 },
+                                    { 510, 150 }, { 520, 150 },
+                                    { 580, 110 }, { 590, 120 } };
 
-        EDGE_T      edge_1      = { { 10,  10  }, { 20,  20  }, false };
-        EDGE_T      edge_2      = { { 110, 150 }, { 120, 160 }, false };
-        EDGE_T      edge_3      = { { 180, 110 }, { 190, 120 }, false };
-        EDGE_T      edge_4      = { { 510, 150 }, { 520, 150 }, false };
-        EDGE_T      edge_5      = { { 580, 110 }, { 590, 120 }, false };
+        EDGE_T      edge_1      = { 8,  9,  false };
+        EDGE_T      edge_2      = { 10, 11, false };
+        EDGE_T      edge_3      = { 12, 13, false };
+        EDGE_T      edge_4      = { 14, 15, false };
+        EDGE_T      edge_5      = { 16, 17, false };
 
         if (test_colision(vertices, 0, 4, edge_1) != false)
         {

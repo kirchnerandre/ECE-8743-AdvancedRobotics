@@ -219,13 +219,13 @@ bool test_colision(VERTEX_T* Vertices, NUMBER_T PolygonBegin, NUMBER_T PolygonEn
             offset_d = i + 1;
         }
 
-        if (test_edges_colision(Vertices[offset_c], Vertices[offset_d], Edge.VertexA, Edge.VertexB))
+        if (test_edges_colision(Vertices[offset_c], Vertices[offset_d], Vertices[Edge.IndexA], Vertices[Edge.IndexB]))
         {
             return true;
         }
     }
 
-    if (test_edge_inside_polygon(Edge.VertexA, Edge.VertexB, Vertices, PolygonBegin, PolygonEnd))
+    if (test_edge_inside_polygon(Vertices[Edge.IndexA], Vertices[Edge.IndexB], Vertices, PolygonBegin, PolygonEnd))
     {
         return true;
     }
