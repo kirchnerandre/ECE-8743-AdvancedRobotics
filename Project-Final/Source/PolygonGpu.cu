@@ -169,34 +169,23 @@ namespace
 
     __device__ bool test_edge_inside_polygon(VERTEX_T& VertexA, VERTEX_T& VertexB, VERTEX_T* Vertices, int32_t PolygonBegin, int32_t PolygonEnd)
     {
-        int32_t vertex_o = PolygonBegin;
+        int32_t     vertex_o    = PolygonBegin;
+
+        VERTEX_T    vertex_m    = { (VertexA.X + VertexB.X) / 2, (VertexA.Y + VertexB.Y) / 2};
 
         for (int32_t vertex_j = vertex_o + 2; vertex_j < PolygonEnd; vertex_j++)
         {
             int32_t vertex_i = vertex_j - 1;
 
-            float oi_x_oa = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], VertexA);
-            float ij_x_ia = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], VertexA);
-            float jo_x_ja = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], VertexA);
+            float oi_x_om = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], vertex_m);
+            float ij_x_im = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], vertex_m);
+            float jo_x_jm = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], vertex_m);
 
-            if ((oi_x_oa >= 0.0f) && (ij_x_ia >= 0.0f) && (jo_x_ja >= 0.0f))
+            if ((oi_x_om >= 0.0f) && (ij_x_im >= 0.0f) && (jo_x_jm >= 0.0f))
             {
                 return true;
             }
-            else if ((oi_x_oa <= 0.0f) && (ij_x_ia <= 0.0f) && (jo_x_ja <= 0.0f))
-            {
-                return true;
-            }
-
-            float oi_x_ob = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], VertexB);
-            float ij_x_ib = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], VertexB);
-            float jo_x_jb = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], VertexB);
-
-            if ((oi_x_ob >= 0.0f) && (ij_x_ib >= 0.0f) && (jo_x_jb >= 0.0f))
-            {
-                return true;
-            }
-            else if ((oi_x_ob <= 0.0f) && (ij_x_ib <= 0.0f) && (jo_x_jb <= 0.0f))
+            else if ((oi_x_om <= 0.0f) && (ij_x_im <= 0.0f) && (jo_x_jm <= 0.0f))
             {
                 return true;
             }
