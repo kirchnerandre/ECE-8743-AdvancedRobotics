@@ -163,34 +163,23 @@ namespace
 
     bool test_edge_inside_polygon(VERTEX_T& VertexA, VERTEX_T& VertexB, VERTEX_T* Vertices, int32_t PolygonBegin, int32_t PolygonEnd)
     {
-        int32_t vertex_o = PolygonBegin;
+        int32_t     vertex_o    = PolygonBegin;
+
+        VERTEX_T    vertex_m    = { (VertexA.X + VertexB.X) / 2, (VertexA.Y + VertexB.Y) / 2};
 
         for (int32_t vertex_j = vertex_o + 2; vertex_j < PolygonEnd; vertex_j++)
         {
             int32_t vertex_i = vertex_j - 1;
 
-            int32_t oi_x_oa = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], VertexA);
-            int32_t ij_x_ia = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], VertexA);
-            int32_t jo_x_ja = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], VertexA);
+            int32_t oi_x_om = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], vertex_m);
+            int32_t ij_x_im = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], vertex_m);
+            int32_t jo_x_jm = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], vertex_m);
 
-            if ((oi_x_oa >= 0) && (ij_x_ia >= 0) && (jo_x_ja >= 0))
+            if ((oi_x_om >= 0) && (ij_x_im >= 0) && (jo_x_jm >= 0))
             {
                 return true;
             }
-            else if ((oi_x_oa <= 0) && (ij_x_ia <= 0) && (jo_x_ja <= 0))
-            {
-                return true;
-            }
-
-            int32_t oi_x_ob = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], VertexB);
-            int32_t ij_x_ib = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], VertexB);
-            int32_t jo_x_jb = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], VertexB);
-
-            if ((oi_x_ob >= 0) && (ij_x_ib >= 0) && (jo_x_jb >= 0))
-            {
-                return true;
-            }
-            else if ((oi_x_ob <= 0) && (ij_x_ib <= 0) && (jo_x_jb <= 0))
+            else if ((oi_x_om <= 0) && (ij_x_im <= 0) && (jo_x_jm <= 0))
             {
                 return true;
             }
