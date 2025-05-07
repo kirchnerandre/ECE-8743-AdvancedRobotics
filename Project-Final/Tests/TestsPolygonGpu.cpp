@@ -10,9 +10,9 @@ namespace
     bool test_1()
     {
         VERTEX_T    vertices[]          = {
-            { 400, 200 }, { 800, 200 }, { 800, 400 }, { 400, 400 } };
+            { 400.0f, 200.0f }, { 800.0f, 200.0f }, { 800.0f, 400.0f }, { 400.0f, 400.0f }, { 300.0f, 300.0f }, { 900.0f, 300.0f } };
 
-        EDGE_T      edge                = { { 300, 300 }, { 900, 300 }, false };
+        EDGE_T      edge                = { 4, 5, false };
 
         NUMBER_T    polygons_begin[]    = { 0 };
 
@@ -22,7 +22,7 @@ namespace
 
         BOOL_T      expected[]          = { true };
 
-        if (!test_colision(statuses, polygons_begin, polygons_end, vertices, edge, 4u, 1u))
+        if (!test_colision(statuses, polygons_begin, polygons_end, vertices, edge, 6u, 1u))
         {
             fprintf(stderr, "%s:%d:%s: test_colision failed\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
@@ -42,9 +42,10 @@ namespace
     {
         VERTEX_T    vertices[]          = {
             { 100, 200 }, { 200, 200 }, { 200, 400 }, { 100, 400 },
-            { 400, 200 }, { 800, 200 }, { 800, 400 }, { 400, 400 } };
+            { 400, 200 }, { 800, 200 }, { 800, 400 }, { 400, 400 },
+            { 300, 300 }, { 900, 300 } };
 
-        EDGE_T      edge                = { { 300, 300 }, { 900, 300 }, false };
+        EDGE_T      edge                = { 8, 9, false };
 
         NUMBER_T    polygons_begin[]    = { 0, 4 };
 
@@ -54,7 +55,7 @@ namespace
 
         BOOL_T      expected[]          = { false, true };
 
-        if (!test_colision(statuses, polygons_begin, polygons_end, vertices, edge, 8u, 2u))
+        if (!test_colision(statuses, polygons_begin, polygons_end, vertices, edge, 10u, 2u))
         {
             fprintf(stderr, "%s:%d:%s: test_colision failed\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
@@ -96,9 +97,11 @@ namespace
             { 1150, 1550 }, { 1050, 1800 }, { 1100, 1850 }, { 1300, 1750 }, { 1250, 1500 },
             { 1500,  900 }, { 1600,  950 }, { 1750,  750 }, { 1700,  700 },
             { 1400, 1300 }, { 1350, 1650 }, { 1450, 1700 }, { 1650, 1400 },
-            { 1650, 1050 }, { 1700, 1300 }, { 1950, 1200 }, { 1900,  950 } };
+            { 1650, 1050 }, { 1700, 1300 }, { 1950, 1200 }, { 1900,  950 },
 
-        EDGE_T      edge                = { { 200, 200 }, { 1800, 1800 }, false };
+            { 200, 200 }, { 1800, 1800 } };
+
+        EDGE_T      edge                = { 65, 66, false };
 
         NUMBER_T    polygons_begin[]    = {
             0,  4,  8,  12, 17,

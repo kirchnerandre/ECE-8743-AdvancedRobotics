@@ -40,11 +40,11 @@ namespace
             }
             else
             {
-                int32_t y_a = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
-                int32_t y_b = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
+                float y_a   = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
+                float y_b   = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
 
-                int32_t y_c = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
-                int32_t y_d = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
+                float y_c   = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
+                float y_d   = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
 
                 if ((y_a <= y_c) && (y_c <= y_b))
                 {
@@ -70,11 +70,11 @@ namespace
         }
         else if (VertexA.X == VertexB.X)
         {
-            int32_t y_a = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
-            int32_t y_b = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
+            float y_a   = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
+            float y_b   = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
 
-            int32_t y_c = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
-            int32_t y_d = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
+            float y_c   = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
+            float y_d   = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
 
             float m_cd  = 0.0f;
             float n_cd  = 0.0f;
@@ -94,11 +94,11 @@ namespace
         }
         else if (VertexC.X == VertexD.X)
         {
-            int32_t y_a = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
-            int32_t y_b = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
+            float y_a   = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
+            float y_b   = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
 
-            int32_t y_c = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
-            int32_t y_d = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
+            float y_c   = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
+            float y_d   = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
 
             float m_ab  = 0.0f;
             float n_ab  = 0.0f;
@@ -118,17 +118,17 @@ namespace
         }
         else
         {
-            int32_t x_a = VertexA.X <= VertexB.X ? VertexA.X : VertexB.X;
-            int32_t x_b = VertexA.X >  VertexB.X ? VertexA.X : VertexB.X;
+            float x_a   = VertexA.X <= VertexB.X ? VertexA.X : VertexB.X;
+            float x_b   = VertexA.X >  VertexB.X ? VertexA.X : VertexB.X;
 
-            int32_t x_c = VertexC.X <= VertexD.X ? VertexC.X : VertexD.X;
-            int32_t x_d = VertexC.X >  VertexD.X ? VertexC.X : VertexD.X;
+            float x_c   = VertexC.X <= VertexD.X ? VertexC.X : VertexD.X;
+            float x_d   = VertexC.X >  VertexD.X ? VertexC.X : VertexD.X;
 
-            int32_t y_a = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
-            int32_t y_b = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
+            float y_a   = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
+            float y_b   = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
 
-            int32_t y_c = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
-            int32_t y_d = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
+            float y_c   = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
+            float y_d   = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
 
             float m_ab  = static_cast<float>(VertexB.Y - VertexA.Y)
                         / static_cast<float>(VertexB.X - VertexA.X);
@@ -155,13 +155,13 @@ namespace
     }
 
 
-    __device__ int32_t cross_product(VERTEX_T& VertexA, VERTEX_T& VertexB, VERTEX_T& VertexC, VERTEX_T& VertexD)
+    __device__ float cross_product(VERTEX_T& VertexA, VERTEX_T& VertexB, VERTEX_T& VertexC, VERTEX_T& VertexD)
     {
-        int32_t x_ab = VertexB.X - VertexA.X;
-        int32_t y_ab = VertexB.Y - VertexA.Y;
+        float x_ab = VertexB.X - VertexA.X;
+        float y_ab = VertexB.Y - VertexA.Y;
 
-        int32_t x_cd = VertexC.X - VertexD.X;
-        int32_t y_cd = VertexC.Y - VertexD.Y;
+        float x_cd = VertexC.X - VertexD.X;
+        float y_cd = VertexC.Y - VertexD.Y;
 
         return x_ab * y_cd - x_cd * y_ab;
     }
@@ -175,28 +175,28 @@ namespace
         {
             int32_t vertex_i = vertex_j - 1;
 
-            int32_t oi_x_oa = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], VertexA);
-            int32_t ij_x_ia = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], VertexA);
-            int32_t jo_x_ja = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], VertexA);
+            float oi_x_oa = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], VertexA);
+            float ij_x_ia = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], VertexA);
+            float jo_x_ja = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], VertexA);
 
-            if ((oi_x_oa >= 0) && (ij_x_ia >= 0) && (jo_x_ja >= 0))
+            if ((oi_x_oa >= 0.0f) && (ij_x_ia >= 0.0f) && (jo_x_ja >= 0.0f))
             {
                 return true;
             }
-            else if ((oi_x_oa <= 0) && (ij_x_ia <= 0) && (jo_x_ja <= 0))
+            else if ((oi_x_oa <= 0.0f) && (ij_x_ia <= 0.0f) && (jo_x_ja <= 0.0f))
             {
                 return true;
             }
 
-            int32_t oi_x_ob = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], VertexB);
-            int32_t ij_x_ib = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], VertexB);
-            int32_t jo_x_jb = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], VertexB);
+            float oi_x_ob = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], VertexB);
+            float ij_x_ib = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], VertexB);
+            float jo_x_jb = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], VertexB);
 
-            if ((oi_x_ob >= 0) && (ij_x_ib >= 0) && (jo_x_jb >= 0))
+            if ((oi_x_ob >= 0.0f) && (ij_x_ib >= 0.0f) && (jo_x_jb >= 0.0f))
             {
                 return true;
             }
-            else if ((oi_x_ob <= 0) && (ij_x_ib <= 0) && (jo_x_jb <= 0))
+            else if ((oi_x_ob <= 0.0f) && (ij_x_ib <= 0.0f) && (jo_x_jb <= 0.0f))
             {
                 return true;
             }
@@ -224,13 +224,13 @@ namespace
                 offset_d = i + 1;
             }
 
-            if (test_edges_colision(Vertices[offset_c], Vertices[offset_d], Edge->VertexA, Edge->VertexB))
+            if (test_edges_colision(Vertices[offset_c], Vertices[offset_d], Vertices[Edge->IndexA], Vertices[Edge->IndexB]))
             {
                 return true;
             }
         }
 
-        if (test_edge_inside_polygon(Edge->VertexA, Edge->VertexB, Vertices, PolygonBegin, PolygonEnd))
+        if (test_edge_inside_polygon(Vertices[Edge->IndexA], Vertices[Edge->IndexB], Vertices, PolygonBegin, PolygonEnd))
         {
             return true;
         }

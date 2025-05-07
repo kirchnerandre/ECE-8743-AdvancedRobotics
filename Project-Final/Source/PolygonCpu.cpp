@@ -14,9 +14,9 @@ namespace
         }
         else
         {
-            M = static_cast<float>(VertexB.Y - VertexA.Y) / static_cast<float>(VertexB.X - VertexA.X);
+            M = (VertexB.Y - VertexA.Y) / (VertexB.X - VertexA.X);
 
-            N = static_cast<float>(VertexA.Y) - M * static_cast<float>(VertexA.X);
+            N = (VertexA.Y) - M * (VertexA.X);
 
             return true;
         }
@@ -34,11 +34,11 @@ namespace
             }
             else
             {
-                int32_t y_a = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
-                int32_t y_b = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
+                float y_a   = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
+                float y_b   = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
 
-                int32_t y_c = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
-                int32_t y_d = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
+                float y_c   = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
+                float y_d   = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
 
                 if ((y_a <= y_c) && (y_c <= y_b))
                 {
@@ -64,11 +64,11 @@ namespace
         }
         else if (VertexA.X == VertexB.X)
         {
-            int32_t y_a = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
-            int32_t y_b = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
+            float y_a   = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
+            float y_b   = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
 
-            int32_t y_c = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
-            int32_t y_d = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
+            float y_c   = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
+            float y_d   = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
 
             float m_cd  = 0.0f;
             float n_cd  = 0.0f;
@@ -88,11 +88,11 @@ namespace
         }
         else if (VertexC.X == VertexD.X)
         {
-            int32_t y_a = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
-            int32_t y_b = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
+            float y_a   = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
+            float y_b   = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
 
-            int32_t y_c = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
-            int32_t y_d = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
+            float y_c   = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
+            float y_d   = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
 
             float m_ab  = 0.0f;
             float n_ab  = 0.0f;
@@ -112,25 +112,23 @@ namespace
         }
         else
         {
-            int32_t x_a = VertexA.X <= VertexB.X ? VertexA.X : VertexB.X;
-            int32_t x_b = VertexA.X >  VertexB.X ? VertexA.X : VertexB.X;
+            float x_a   = VertexA.X <= VertexB.X ? VertexA.X : VertexB.X;
+            float x_b   = VertexA.X >  VertexB.X ? VertexA.X : VertexB.X;
 
-            int32_t x_c = VertexC.X <= VertexD.X ? VertexC.X : VertexD.X;
-            int32_t x_d = VertexC.X >  VertexD.X ? VertexC.X : VertexD.X;
+            float x_c   = VertexC.X <= VertexD.X ? VertexC.X : VertexD.X;
+            float x_d   = VertexC.X >  VertexD.X ? VertexC.X : VertexD.X;
 
-            int32_t y_a = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
-            int32_t y_b = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
+            float y_a   = VertexA.Y <= VertexB.Y ? VertexA.Y : VertexB.Y;
+            float y_b   = VertexA.Y >  VertexB.Y ? VertexA.Y : VertexB.Y;
 
-            int32_t y_c = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
-            int32_t y_d = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
+            float y_c   = VertexC.Y <= VertexD.Y ? VertexC.Y : VertexD.Y;
+            float y_d   = VertexC.Y >  VertexD.Y ? VertexC.Y : VertexD.Y;
 
-            float m_ab  = static_cast<float>(VertexB.Y - VertexA.Y)
-                        / static_cast<float>(VertexB.X - VertexA.X);
+            float m_ab  = (VertexB.Y - VertexA.Y) / (VertexB.X - VertexA.X);
 
             float n_ab  = VertexA.Y - VertexA.X * m_ab;
 
-            float m_cd  = static_cast<float>(VertexD.Y - VertexC.Y)
-                        / static_cast<float>(VertexD.X - VertexC.X);
+            float m_cd  = (VertexD.Y - VertexC.Y) / (VertexD.X - VertexC.X);
 
             float n_cd  = VertexC.Y - VertexC.X * m_cd;
 
@@ -171,15 +169,15 @@ namespace
         {
             int32_t vertex_i = vertex_j - 1;
 
-            int32_t oi_x_om = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], vertex_m);
-            int32_t ij_x_im = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], vertex_m);
-            int32_t jo_x_jm = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], vertex_m);
+            float oi_x_om = cross_product(Vertices[vertex_o], Vertices[vertex_i], Vertices[vertex_o], vertex_m);
+            float ij_x_im = cross_product(Vertices[vertex_i], Vertices[vertex_j], Vertices[vertex_i], vertex_m);
+            float jo_x_jm = cross_product(Vertices[vertex_j], Vertices[vertex_o], Vertices[vertex_j], vertex_m);
 
-            if ((oi_x_om >= 0) && (ij_x_im >= 0) && (jo_x_jm >= 0))
+            if ((oi_x_om >= 0.0f) && (ij_x_im >= 0.0f) && (jo_x_jm >= 0.0f))
             {
                 return true;
             }
-            else if ((oi_x_om <= 0) && (ij_x_im <= 0) && (jo_x_jm <= 0))
+            else if ((oi_x_om <= 0.0f) && (ij_x_im <= 0.0f) && (jo_x_jm <= 0.0f))
             {
                 return true;
             }

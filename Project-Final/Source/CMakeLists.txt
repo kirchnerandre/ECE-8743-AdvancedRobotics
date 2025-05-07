@@ -1,7 +1,7 @@
 add_library(ProjectFinal STATIC
     Interface.cpp
     PolygonCpu.cpp
-#   PolygonGpu.cu
+    PolygonGpu.cu
     Printer.cpp
 )
 
