@@ -7,8 +7,8 @@
 
 struct VERTEX_T
 {
-    int32_t     X;
-    int32_t     Y;
+    float       X;
+    float       Y;
 };
 
 typedef std::vector<VERTEX_T>   VERTICES_T;

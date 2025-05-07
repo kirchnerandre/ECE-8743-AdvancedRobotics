@@ -55,6 +55,32 @@ namespace
     }
 
 
+    void get_number(float& Number, size_t& Offset, std::string& Line)
+    {
+        std::string number;
+
+        while (1)
+        {
+            if (Offset >= Line.size())
+            {
+                break;
+            }
+            else if ('0' <= (Line.at(Offset)) && (Line.at(Offset) <= '9'))
+            {
+                number += Line.at(Offset);
+            }
+            else if (number.size())
+            {
+                break;
+            }
+
+            Offset++;
+        }
+
+        Number = std::stof(number);
+    }
+
+
     bool get_line(std::string& Line, FILE* File)
     {
         while (1)
