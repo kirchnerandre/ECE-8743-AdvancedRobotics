@@ -16,8 +16,8 @@ typedef VERTICES_T::iterator    IVERTEX_T;
 
 struct EDGE_T
 {
-    VERTEX_T    VertexA;
-    VERTEX_T    VertexB;
+    int32_t     IndexA;
+    int32_t     IndexB;
     bool        Status;
 };
 

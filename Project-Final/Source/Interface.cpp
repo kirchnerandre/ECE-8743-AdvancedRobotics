@@ -7,172 +7,125 @@
 
 namespace
 {
-    void get_number(int32_t& Number, FILE* File)
+    void get_edges(EDGES_T& Edges, NUMBER_T PolygonBegin, NUMBER_T PolygonEnd)
+    {
+        for (NUMBER_T i = PolygonBegin; i < PolygonEnd; i++)
+        {
+            EDGE_T edge{};
+
+            if (i == PolygonBegin)
+            {
+                edge.IndexA = PolygonEnd - 1;
+                edge.IndexB = i;
+            }
+            else
+            {
+                edge.IndexA = i - 1;
+                edge.IndexB = i;
+            }
+
+            Edges.push_back(edge);
+        }
+    }
+
+
+    void get_number(int32_t& Number, size_t& Offset, std::string& Line)
     {
         std::string number;
 
+        while (1)
+        {
+            if (Offset >= Line.size())
+            {
+                break;
+            }
+            else if ('0' <= (Line.at(Offset)) && (Line.at(Offset) <= '9'))
+            {
+                number += Line.at(Offset);
+            }
+            else if (number.size())
+            {
+                break;
+            }
+
+            Offset++;
+        }
+
+        Number = std::stoi(number);
+    }
+
+
+    bool get_line(std::string& Line, FILE* File)
+    {
         while (1)
         {
             char symbol = getc(File);
 
-            if ((symbol == ' ') || (symbol == '\n') || (symbol == EOF))
+            if (symbol == EOF)
             {
-                if (number.size())
-                {
-                    Number = std::stoi(number);
-                    break;
-                }
+                return false;
+            }
+            else if (symbol == '\n')
+            {
+                return true;
             }
             else
             {
-                number += symbol;
+                Line += symbol;
             }
         }
-    }
-
-
-    bool get_vertices(VERTICES_T& Vertices, size_t Numbers, std::string& Filename)
-    {
-        bool        ret_val = true;
-        FILE*       file    = nullptr;
-        std::string number;
-
-        if (fopen_s(&file, Filename.c_str(), "r"))
-        {
-            fprintf(stderr, "%s:%d:%s: Failed to open file\n", __FILE__, __LINE__, __FUNCTION__);
-            ret_val = false;
-            goto terminate;
-        }
-
-        Vertices.reserve(Numbers / 2);
-
-        for (size_t i = 0u; i < Numbers / 2; i++)
-        {
-            VERTEX_T vertex{};
-
-            get_number(vertex.X, file);
-            get_number(vertex.Y, file);
-
-            Vertices.push_back(vertex);
-        }
-
-    terminate:
-        if (file)
-        {
-            fclose(file);
-        }
-
-        return ret_val;
-    }
-
-
-    bool count_lines(size_t& Lines, std::string& Filename)
-    {
-        bool    ret_val = true;
-        FILE*   file    = nullptr;
-
-        Lines = 0u;
-
-        if (fopen_s(&file, Filename.c_str(), "r"))
-        {
-            fprintf(stderr, "%s:%d:%s: Failed to open file\n", __FILE__, __LINE__, __FUNCTION__);
-            ret_val = false;
-            goto terminate;
-        }
-
-        while (1)
-        {
-            char symbols = getc(file);
-
-            if (symbols == '\n')
-            {
-                Lines++;
-            }
-            else if (symbols == EOF)
-            {
-                break;
-            }
-        }
-
-    terminate:
-        if (file)
-        {
-            fclose(file);
-        }
-
-        return ret_val;
-    }
-
-
-    bool count_numbers(size_t& Numbers, std::string& Filename)
-    {
-        bool        ret_val = true;
-        FILE*       file    = nullptr;
-        std::string number;
-
-        Numbers = 0u;
-
-        if (fopen_s(&file, Filename.c_str(), "r"))
-        {
-            fprintf(stderr, "%s:%d:%s: Failed to open file\n", __FILE__, __LINE__, __FUNCTION__);
-            ret_val = false;
-            goto terminate;
-        }
-
-        while (1)
-        {
-            char symbol = getc(file);
-
-            if ((symbol == ' ') || (symbol == '\n') || (symbol == EOF))
-            {
-                if (number.size())
-                {
-                    Numbers++;
-                    number = "";
-                }
-
-                if (symbol == EOF)
-                {
-                    break;
-                }
-            }
-            else
-            {
-                number += symbol;
-            }
-        }
-
-    terminate:
-        if (file)
-        {
-            fclose(file);
-        }
-
-        return ret_val;
     }
 }
 
 
-bool read_map(VERTICES_T& Vertices, size_t& Polygons, std::string Filename)
+bool read_map(VERTICES_T& Vertices, EDGES_T& Edges, NUMBERS_T& PolygonsBegin, NUMBERS_T& PolygonsEnd, std::string Filename)
 {
-    if (!count_lines(Polygons, Filename))
+    bool        ret_val = true;
+    FILE*       file    = nullptr;
+
+    if (fopen_s(&file, Filename.c_str(), "r"))
     {
-        fprintf(stderr, "%s:%d:%s: Failed to get number of lines\n", __FILE__, __LINE__, __FUNCTION__);
-        return false;
+        fprintf(stderr, "%s:%d:%s: Failed to open file\n", __FILE__, __LINE__, __FUNCTION__);
+        ret_val = false;
+        goto terminate;
     }
 
-    size_t numbers = 0u;
-
-    if (!count_numbers(numbers, Filename))
+    while (1)
     {
-        fprintf(stderr, "%s:%d:%s: Failed to get number of numbers\n", __FILE__, __LINE__, __FUNCTION__);
-        return false;
+        std::string line;
+
+        if (!get_line(line, file))
+        {
+            break;
+        }
+
+        NUMBER_T    size    = 0;
+        NUMBER_T    zero    = 0;
+        size_t      offset  = 0u;
+
+        get_number(size, offset, line);
+        get_number(zero, offset, line);
+
+        PolygonsEnd  .push_back(Vertices.size() + size);
+        PolygonsBegin.push_back(Vertices.size());
+
+        get_edges(Edges, PolygonsBegin.back(), PolygonsEnd.back());
+
+        for (NUMBER_T i = 0; i < size; i++)
+        {
+            VERTEX_T vertex{};
+
+            get_number(vertex.X, offset, line);
+            get_number(vertex.Y, offset, line);
+
+            Vertices.push_back(vertex);
+        }
     }
 
-    if (!get_vertices(Vertices, numbers, Filename))
+terminate:
+    if (file)
     {
-        fprintf(stderr, "%s:%d:%s: Failed to get vertices\n", __FILE__, __LINE__, __FUNCTION__);
-        return false;
+        fclose(file);
     }
 
     return true;
