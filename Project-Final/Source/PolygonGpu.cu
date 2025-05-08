@@ -8,7 +8,7 @@
 namespace
 {
     constexpr int32_t max_threads   = 32;
-    constexpr int32_t max_vertices  = 1024;
+    constexpr int32_t max_vertices  = 128;
     constexpr int32_t max_polygons  = 32;
 
 
@@ -363,6 +363,4 @@ terminate:
     }
 
     return ret_val;
-
-    return true;
 }

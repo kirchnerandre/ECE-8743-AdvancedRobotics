@@ -9,6 +9,9 @@ struct VERTEX_T
 {
     float       X;
     float       Y;
+    int32_t     Index;
+    bool        Active;
+    float       Cost;
 };
 
 typedef std::vector<VERTEX_T>   VERTICES_T;
@@ -19,6 +22,7 @@ struct EDGE_T
     int32_t     IndexA;
     int32_t     IndexB;
     bool        Status;
+    float       Cost;
 };
 
 typedef std::vector<EDGE_T>     EDGES_T;
