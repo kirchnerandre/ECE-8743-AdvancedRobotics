@@ -9,7 +9,7 @@ struct VERTEX_T
 {
     float       X;
     float       Y;
-    int32_t     Index;
+    int32_t     Source;
     bool        Active;
     float       Cost;
 };

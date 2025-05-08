@@ -10,92 +10,113 @@ namespace
     constexpr int32_t max_vertices  = 64;
     constexpr int32_t max_edges     = 1024;
 
-    struct PATH_T
+    struct DATA_T
     {
         float   Cost;
-        int32_t Index;
+        int32_t Source;
     };
 
-    __global__ void gpu_compute_path(VERTEX_T* Vertices, EDGE_T* Edges, size_t VerticesSize, size_t EdgesSize)
-    {
-        __shared__  PATH_T      paths_all   [max_vertices * max_threads];
-        __shared__  VERTEX_T    vertices    [max_vertices];
-        __shared__  EDGE_T      edges       [max_edges];
 
-        int32_t                 x           = threadIdx.x;
+    __device__ bool is_active(VERTEX_T* Vertices, size_t VerticesSize)
+    {
+        __shared__ bool active[max_vertices];
 
         for (int32_t i = 0; i < max_vertices; i += max_threads)
         {
-            if (x < VerticesSize)
-            {
-                vertices[x + i] = Vertices[x + i];
-            }
+            active[threadIdx.x + i] = Vertices[threadIdx.x + i].Active;
         }
 
         __syncthreads();
 
-        for (int32_t i = 0; i < max_edges; i += max_threads)
+        for (int32_t i = max_vertices / 2; i >= 1; i /= 2)
         {
-            if (x < EdgesSize)
+            if (threadIdx.x < i)
             {
-                edges[x + i] = Edges[x + i];
-            }
-        }
-
-        __syncthreads();
-
-        for (int32_t i = 0; i < max_edges; i += max_threads)
-        {
-            if (x + i < EdgesSize)
-            {
-                if (vertices[Edges[x + i].IndexA].Active)
+                if ((active[threadIdx.x]) || (active[threadIdx.x + i]))
                 {
-printf("B %d %d %d\n", x, i, Edges[x].IndexB);
-                    paths_all[Edges[x].IndexB + max_vertices * x] = { vertices[Edges[x + i].IndexA].Cost + edges[x + i].Cost, Edges[x + i].IndexA };
+                    active[threadIdx.x] = true;
                 }
             }
         }
 
         __syncthreads();
 
-if (x == 0)
-for (int i = 0; i < max_vertices * max_threads; i++)
-{
-    if (paths_all[i].Cost)
-    {
-        printf("%4d %f %d\n", i, paths_all[i].Cost, paths_all[i].Index);
+        return active[0];
     }
-}
-__syncthreads();
 
-        __syncthreads();
 
+    __device__ void load_vertices(VERTEX_T* VerticesShared, VERTEX_T* VerticesGlobal, size_t VerticesSize)
+    {
         for (int32_t i = 0; i < max_vertices; i += max_threads)
         {
-            if (x + i < VerticesSize)
+            if (threadIdx.x + i < VerticesSize)
             {
-                vertices[x + i].Active = false;
+                VerticesShared[threadIdx.x + i] = VerticesGlobal[threadIdx.x + i];
+            }
+        }
+
+        __syncthreads();
+    }
+
+
+    __device__ void load_edges(EDGE_T* EdgesShared, EDGE_T* EdgesGlobal, size_t EdgesSize)
+    {
+        for (int32_t i = 0; i < max_edges; i += max_threads)
+        {
+            if (threadIdx.x < EdgesSize)
+            {
+                EdgesShared[threadIdx.x + i] = EdgesGlobal[threadIdx.x + i];
+            }
+        }
+
+        __syncthreads();
+    }
+
+
+    __device__ void calculta_costs(DATA_T* Data, VERTEX_T* Vertices, EDGE_T* Edges, size_t VerticesSize, size_t EdgesSize)
+    {
+        for (int32_t i = 0; i < max_edges; i += max_threads)
+        {
+            if (threadIdx.x + i < EdgesSize)
+            {
+                if (Vertices[Edges[threadIdx.x + i].IndexA].Active)
+                {
+                    Data[Edges[threadIdx.x].IndexB + max_vertices * threadIdx.x].Cost   = Vertices[Edges[threadIdx.x + i].IndexA].Cost + Edges[threadIdx.x + i].Cost;
+                    Data[Edges[threadIdx.x].IndexB + max_vertices * threadIdx.x].Source = Edges[threadIdx.x + i].IndexA;
+                }
+            }
+        }
+
+        __syncthreads();
+    }
+
+
+    __device__ void consolidate_data(DATA_T* Data, VERTEX_T* Vertices, EDGE_T* Edges, size_t VerticesSize, size_t EdgesSiz)
+    {
+        for (int32_t i = 0; i < max_vertices; i += max_threads)
+        {
+            if (threadIdx.x + i < VerticesSize)
+            {
+                Vertices[threadIdx.x + i].Active = false;
             }
 
             for (int32_t j = 0; j < max_threads; j++)
             {
-                if (x + i < VerticesSize)
+                if (threadIdx.x + i < VerticesSize)
                 {
-                    if (paths_all[x + i + max_vertices * j].Cost > 0.0f)
+                    if (Data[threadIdx.x + i + max_vertices * j].Cost > 0.0f)
                     {
-                        if (vertices[x + i].Cost == 0.0f)
+                        if (Vertices[threadIdx.x + i].Cost == 0.0f)
                         {
-printf("A %d %10f %10f\n", x + i, vertices[x + i].Cost, paths_all[x + i + max_vertices * j].Cost);
-                            vertices[x + i].Cost    = paths_all[x + i + max_vertices * j].Cost;
-                            vertices[x + i].Index   = paths_all[x + i + max_vertices * j].Index;
-                            vertices[x + i].Active  = true;
+                            Vertices[threadIdx.x + i].Cost    = Data[threadIdx.x + i + max_vertices * j].Cost;
+                            Vertices[threadIdx.x + i].Source  = Data[threadIdx.x + i + max_vertices * j].Source;
+                            Vertices[threadIdx.x + i].Active  = true;
                         }
-                        else if (vertices[x + i].Cost > paths_all[x + i + max_vertices * j].Cost)
+                        else if (Vertices[threadIdx.x + i].Cost > Data[threadIdx.x + i + max_vertices * j].Cost)
                         {
-printf("B %d %10f %10f\n", x + i, vertices[x + i].Cost, paths_all[x + i + max_vertices * j].Cost);
-                            vertices[x + i].Cost    = paths_all[x + i + max_vertices * j].Cost;
-                            vertices[x + i].Index   = paths_all[x + i + max_vertices * j].Index;
-                            vertices[x + i].Active  = true;
+                            Vertices[threadIdx.x + i].Cost    = Data[threadIdx.x + i + max_vertices * j].Cost;
+                            Vertices[threadIdx.x + i].Source  = Data[threadIdx.x + i + max_vertices * j].Source;
+                            Vertices[threadIdx.x + i].Active  = true;
                         }
                     }
                 }
@@ -103,16 +124,53 @@ printf("B %d %10f %10f\n", x + i, vertices[x + i].Cost, paths_all[x + i + max_ve
         }
 
         __syncthreads();
-
-if (x == 0)
-for (int i = 0; i < max_vertices; i++)
-{
-    if (vertices[i].Cost)
-    {
-        printf("Z %4d %f %d %d\n", i, vertices[i].Cost, vertices[i].Index, vertices[i].Active);
     }
-}
-__syncthreads();
+
+
+    __device__ void debug(VERTEX_T* Vertices, size_t VerticesSize)
+    {
+        if (threadIdx.x == 0)
+        {
+            for (int i = 0; i < VerticesSize; i++)
+            {
+                if (Vertices[i].Cost)
+                {
+                    printf("%4d %10f %3d %3d\n", i, Vertices[i].Cost, Vertices[i].Source, Vertices[i].Active);
+                }
+            }
+
+            printf("\n");
+        }
+
+        __syncthreads();
+    }
+
+
+    __global__ void gpu_compute_path(VERTEX_T* Vertices, EDGE_T* Edges, size_t VerticesSize, size_t EdgesSize)
+    {
+        __shared__  DATA_T      data    [max_vertices * max_threads];
+        __shared__  VERTEX_T    vertices[max_vertices];
+        __shared__  EDGE_T      edges   [max_edges];
+
+        int32_t                 x           = threadIdx.x;
+
+        for (int32_t i = 0; i < max_vertices * max_threads; i += max_threads)
+        {
+            data[threadIdx.x + i] = { -1.0f, -1 };
+        }
+
+        load_vertices(vertices, Vertices, VerticesSize);
+
+        load_edges(edges, Edges, EdgesSize);
+
+        while (is_active(vertices, VerticesSize))
+        {
+            calculta_costs(data, vertices, edges, VerticesSize, EdgesSize);
+
+            consolidate_data(data, vertices, edges, VerticesSize, EdgesSize);
+
+            debug(vertices, VerticesSize);
+        }
     }
 }
 
