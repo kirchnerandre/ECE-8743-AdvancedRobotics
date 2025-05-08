@@ -121,9 +121,6 @@ namespace
                 {
                     Data[Edges[threadIdx.x + i].IndexB + max_vertices * threadIdx.x].Cost   = Edges[threadIdx.x + i].Cost + Vertices[Edges[threadIdx.x + i].IndexA].Cost;
                     Data[Edges[threadIdx.x + i].IndexB + max_vertices * threadIdx.x].Source = Edges[threadIdx.x + i].IndexA;
-#if 1
-printf("%2d (%2d, %2d)\n", threadIdx.x, Edges[threadIdx.x + i].IndexA, Edges[threadIdx.x + i].IndexB);
-#endif
                 }
             }
         }
@@ -211,13 +208,7 @@ printf("%2d (%2d, %2d)\n", threadIdx.x, Edges[threadIdx.x + i].IndexA, Edges[thr
         {
             calculta_costs(data, vertices, edges, VerticesSize, EdgesSize);
 
-print_data(data);
-
             consolidate_data(data, vertices, edges, VerticesSize, EdgesSize);
-
-debug(vertices, VerticesSize);
-
-//if (--_counter <= 0) break;
         }
 
         save_vertices(vertices, Vertices, VerticesSize);

@@ -170,7 +170,6 @@ namespace
 
 int main()
 {
-#if 0
     if (!test_1())
     {
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
@@ -182,7 +181,7 @@ int main()
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
         return -1;
     }
-#endif
+
     if (!test_3())
     {
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
