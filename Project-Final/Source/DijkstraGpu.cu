@@ -95,8 +95,8 @@ namespace
             {
                 if (Vertices[Edges[threadIdx.x + i].IndexA].Active)
                 {
-                    Data[Edges[threadIdx.x].IndexB + max_vertices * threadIdx.x].Cost   = Vertices[Edges[threadIdx.x + i].IndexA].Cost + Edges[threadIdx.x + i].Cost;
-                    Data[Edges[threadIdx.x].IndexB + max_vertices * threadIdx.x].Source = Edges[threadIdx.x + i].IndexA;
+                    Data[Edges[threadIdx.x + i].IndexB + max_vertices * threadIdx.x].Cost   = Edges[threadIdx.x + i].Cost + Vertices[Edges[threadIdx.x + i].IndexA].Cost;
+                    Data[Edges[threadIdx.x + i].IndexB + max_vertices * threadIdx.x].Source = Edges[threadIdx.x + i].IndexA;
                 }
             }
         }
@@ -180,8 +180,6 @@ namespace
             calculta_costs(data, vertices, edges, VerticesSize, EdgesSize);
 
             consolidate_data(data, vertices, edges, VerticesSize, EdgesSize);
-
-//          debug(vertices, VerticesSize);
         }
 
         save_vertices(vertices, Vertices, VerticesSize);
