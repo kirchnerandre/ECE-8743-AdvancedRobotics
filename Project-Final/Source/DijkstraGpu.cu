@@ -45,6 +45,20 @@ namespace
     }
 
 
+    __device__ void save_vertices(VERTEX_T* VerticesShared, VERTEX_T* VerticesGlobal, size_t VerticesSize)
+    {
+        for (int32_t i = 0; i < max_vertices; i += max_threads)
+        {
+            if (threadIdx.x + i < VerticesSize)
+            {
+                VerticesGlobal[threadIdx.x + i] = VerticesShared[threadIdx.x + i];
+            }
+        }
+
+        __syncthreads();
+    }
+
+
     __device__ void load_vertices(VERTEX_T* VerticesShared, VERTEX_T* VerticesGlobal, size_t VerticesSize)
     {
         for (int32_t i = 0; i < max_vertices; i += max_threads)
@@ -106,7 +120,7 @@ namespace
                 {
                     if (Data[threadIdx.x + i + max_vertices * j].Cost > 0.0f)
                     {
-                        if (Vertices[threadIdx.x + i].Cost == 0.0f)
+                        if (Vertices[threadIdx.x + i].Cost < 0.0f)
                         {
                             Vertices[threadIdx.x + i].Cost    = Data[threadIdx.x + i + max_vertices * j].Cost;
                             Vertices[threadIdx.x + i].Source  = Data[threadIdx.x + i + max_vertices * j].Source;
@@ -152,8 +166,6 @@ namespace
         __shared__  VERTEX_T    vertices[max_vertices];
         __shared__  EDGE_T      edges   [max_edges];
 
-        int32_t                 x           = threadIdx.x;
-
         for (int32_t i = 0; i < max_vertices * max_threads; i += max_threads)
         {
             data[threadIdx.x + i] = { -1.0f, -1 };
@@ -171,6 +183,8 @@ namespace
 
             debug(vertices, VerticesSize);
         }
+
+        save_vertices(vertices, Vertices, VerticesSize);
     }
 }
 
@@ -214,7 +228,7 @@ bool compute_path(VERTEX_T* Vertices, EDGE_T* Edges, size_t VerticesSize, size_t
 
     gpu_compute_path<<<blocks, threads>>>(gpu_vertices, gpu_edges, VerticesSize, EdgesSize);
 
-    if (cudaMemcpy(Edges, gpu_edges, EdgesSize * sizeof(EDGE_T), cudaMemcpyDeviceToHost))
+    if (cudaMemcpy(Vertices, gpu_vertices, VerticesSize * sizeof(VERTEX_T), cudaMemcpyDeviceToHost))
     {
         fprintf(stderr, "%s:%d:%s: Failed to copy memory\n", __FILE__, __LINE__, __FUNCTION__);
         ret_val = false;

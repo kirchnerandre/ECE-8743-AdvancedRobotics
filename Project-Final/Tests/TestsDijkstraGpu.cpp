@@ -4,11 +4,31 @@
 
 namespace
 {
+    void print_path(VERTEX_T* vertices, size_t VerticesSize, int32_t VertexEnd)
+    {
+        int32_t source = VertexEnd;
+
+        while (1)
+        {
+            if (source < 0)
+            {
+                break;
+            }
+            else
+            {
+                printf("%d\n", source);
+            }
+
+            source = vertices[source].Source;
+        }
+    }
+
+
     bool test_1()
     {
         VERTEX_T    vertices[]  = {
-            { 100, 100, -1, true,  0.0f }, { 200, 100, -1, false, 0.0f },
-            { 100, 200, -1, false, 0.0f }, { 200, 200, -1, false, 0.0f } };
+            { 100, 100, -1, true,   0.0f }, { 200, 100, -1, false, -1.0f },
+            { 100, 200, -1, false, -1.0f }, { 200, 200, -1, false, -1.0f } };
 
         EDGE_T      edges[]     = {
             { 0,  1,  false, 100.0f },
@@ -31,6 +51,8 @@ namespace
             fprintf(stderr, "%s:%d:%s: Failed to compute path\n", __FILE__, __LINE__, __FUNCTION__);
             return false;
         }
+
+        print_path(vertices, sizeof(vertices) / sizeof(VERTEX_T), 3);
 
         return true;
     }
