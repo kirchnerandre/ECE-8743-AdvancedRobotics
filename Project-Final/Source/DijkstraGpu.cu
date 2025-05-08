@@ -181,7 +181,7 @@ namespace
 
             consolidate_data(data, vertices, edges, VerticesSize, EdgesSize);
 
-            debug(vertices, VerticesSize);
+//          debug(vertices, VerticesSize);
         }
 
         save_vertices(vertices, Vertices, VerticesSize);

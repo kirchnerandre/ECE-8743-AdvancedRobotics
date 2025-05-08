@@ -4,9 +4,11 @@
 
 namespace
 {
-    void print_path(VERTEX_T* vertices, size_t VerticesSize, int32_t VertexEnd)
+    void print_path(VERTEX_T* Vertices, int32_t VertexEnd)
     {
         int32_t source = VertexEnd;
+
+        printf(" %10f", Vertices[VertexEnd].Cost);
 
         while (1)
         {
@@ -16,11 +18,13 @@ namespace
             }
             else
             {
-                printf("%d\n", source);
+                printf(" %2d", source);
             }
 
-            source = vertices[source].Source;
+            source = Vertices[source].Source;
         }
+
+        printf("\n");
     }
 
 
@@ -52,7 +56,7 @@ namespace
             return false;
         }
 
-        print_path(vertices, sizeof(vertices) / sizeof(VERTEX_T), 3);
+        print_path(vertices, 3);
 
         return true;
     }
@@ -61,10 +65,10 @@ namespace
     bool test_2()
     {
         VERTEX_T    vertices[]  = {
-            { 100, 100, false }, { 200, 100, false }, { 300, 100, false }, { 400, 100, false },
-            { 100, 200, false }, { 200, 200, false }, { 300, 200, false }, { 400, 200, false },
-            { 100, 300, false }, { 200, 300, false }, { 300, 300, false }, { 400, 300, false },
-            { 100, 400, false }, { 200, 400, false }, { 300, 400, false }, { 400, 400, false } };
+            { 100, 100, -1, true,   0.0f }, { 200, 100, -1, false, -1.0f }, { 300, 100, -1, false, -1.0f }, { 400, 100, -1, false, -1.0f },
+            { 100, 200, -1, false, -1.0f }, { 200, 200, -1, false, -1.0f }, { 300, 200, -1, false, -1.0f }, { 400, 200, -1, false, -1.0f },
+            { 100, 300, -1, false, -1.0f }, { 200, 300, -1, false, -1.0f }, { 300, 300, -1, false, -1.0f }, { 400, 300, -1, false, -1.0f },
+            { 100, 400, -1, false, -1.0f }, { 200, 400, -1, false, -1.0f }, { 300, 400, -1, false, -1.0f }, { 400, 400, -1, false, -1.0f } };
 
         EDGE_T      edges[]     = {
             { 0,  1,  false, 100.0f }, { 1,  2,  false, 100.0f }, { 2,  3,  false, 100.0f },
@@ -92,6 +96,8 @@ namespace
             return false;
         }
 
+        print_path(vertices, 14);
+
         return true;
     }
 }
@@ -100,6 +106,12 @@ namespace
 int main()
 {
     if (!test_1())
+    {
+        fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
+        return -1;
+    }
+
+    if (!test_2())
     {
         fprintf(stderr, "%s:%d:%s: Test failed\n", __FILE__, __LINE__, __FUNCTION__);
         return -1;
