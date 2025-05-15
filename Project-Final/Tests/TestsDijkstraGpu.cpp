@@ -1,9 +1,17 @@
 
+#include <stdio.h>
+
 #include "DijkstraGpu.h"
 
 
 namespace
 {
+    bool compare_paths(VERTEX_T* VerticesA, VERTEX_T* VerticesB)
+    {
+        return true;
+    }
+
+
     void print_path(VERTEX_T* Vertices, int32_t VertexEnd)
     {
         int32_t source = VertexEnd;

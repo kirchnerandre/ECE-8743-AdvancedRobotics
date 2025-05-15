@@ -1,7 +1,8 @@
 
 #include <cuda.h>
+#include <stdio.h>
 
-#include "DataTypes.h"
+#include "DijkstraGpu.h"
 
 
 namespace
