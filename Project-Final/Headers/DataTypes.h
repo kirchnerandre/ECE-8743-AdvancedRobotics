@@ -7,8 +7,6 @@
 
 struct VERTEX_T
 {
-    float       X;
-    float       Y;
     int32_t     Source;
     bool        Active;
     float       Cost;
@@ -21,7 +19,6 @@ struct EDGE_T
 {
     int32_t     IndexA;
     int32_t     IndexB;
-    bool        Status;
     float       Cost;
 };
 
