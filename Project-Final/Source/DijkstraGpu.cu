@@ -11,7 +11,7 @@ namespace
     constexpr int32_t max_vertices  = 64;
     constexpr int32_t max_edges     = 1024;
 
-    struct DATA_T
+    struct VERTEX_TMP_T
     {
         float   Cost;
         int32_t Source;
@@ -98,11 +98,11 @@ namespace
 
 
     __device__ void calculate_costs(
-        DATA_T*     Data,
-        VERTEX_T*   Vertices,
-        EDGE_T*     Edges,
-        size_t      VerticesSize,
-        size_t      EdgesSize)
+        VERTEX_TMP_T*   VerticesTmp,
+        VERTEX_T*       Vertices,
+        EDGE_T*         Edges,
+        size_t          VerticesSize,
+        size_t          EdgesSize)
     {
         for (int32_t i = 0; i < max_edges; i += max_threads)
         {
@@ -110,16 +110,18 @@ namespace
             {
                 if (Vertices[Edges[threadIdx.x + i].IndexA].Active)
                 {
-                    Data[Edges[threadIdx.x + i].IndexB + max_vertices * threadIdx.x].Cost   =
+                    VerticesTmp[Edges[threadIdx.x + i].IndexB + max_vertices * threadIdx.x].Cost   =
                         Edges[threadIdx.x + i].Cost + Vertices[Edges[threadIdx.x + i].IndexA].Cost;
-                    Data[Edges[threadIdx.x + i].IndexB + max_vertices * threadIdx.x].Source =
+
+                    VerticesTmp[Edges[threadIdx.x + i].IndexB + max_vertices * threadIdx.x].Source =
                         Edges[threadIdx.x + i].IndexA;
                 }
                 else if (Vertices[Edges[threadIdx.x + i].IndexB].Active)
                 {
-                    Data[Edges[threadIdx.x + i].IndexA + max_vertices * threadIdx.x].Cost   =
+                    VerticesTmp[Edges[threadIdx.x + i].IndexA + max_vertices * threadIdx.x].Cost   =
                         Edges[threadIdx.x + i].Cost + Vertices[Edges[threadIdx.x + i].IndexB].Cost;
-                    Data[Edges[threadIdx.x + i].IndexA + max_vertices * threadIdx.x].Source =
+
+                    VerticesTmp[Edges[threadIdx.x + i].IndexA + max_vertices * threadIdx.x].Source =
                         Edges[threadIdx.x + i].IndexB;
                 }
             }
@@ -130,11 +132,11 @@ namespace
 
 
     __device__ void consolidate_costs(
-        DATA_T*     Data,
-        VERTEX_T*   Vertices,
-        EDGE_T*     Edges,
-        size_t      VerticesSize,
-        size_t      EdgesSiz)
+        VERTEX_TMP_T*   VerticesTmp,
+        VERTEX_T*       Vertices,
+        EDGE_T*         Edges,
+        size_t          VerticesSize,
+        size_t          EdgesSiz)
     {
         for (int32_t i = 0; i < max_vertices; i += max_threads)
         {
@@ -147,23 +149,27 @@ namespace
             {
                 if (threadIdx.x + i < VerticesSize)
                 {
-                    if (Data[threadIdx.x + i + max_vertices * j].Cost > 0.0f)
+                    if (VerticesTmp[threadIdx.x + i + max_vertices * j].Cost > 0.0f)
                     {
                         if (Vertices[threadIdx.x + i].Cost < 0.0f)
                         {
                             Vertices[threadIdx.x + i].Cost    =
-                                Data[threadIdx.x + i + max_vertices * j].Cost;
+                                VerticesTmp[threadIdx.x + i + max_vertices * j].Cost;
+
                             Vertices[threadIdx.x + i].Source  =
-                                Data[threadIdx.x + i + max_vertices * j].Source;
+                                VerticesTmp[threadIdx.x + i + max_vertices * j].Source;
+
                             Vertices[threadIdx.x + i].Active  = true;
                         }
                         else if (Vertices[threadIdx.x + i].Cost >
-                            Data[threadIdx.x + i + max_vertices * j].Cost)
+                            VerticesTmp[threadIdx.x + i + max_vertices * j].Cost)
                         {
                             Vertices[threadIdx.x + i].Cost    =
-                                Data[threadIdx.x + i + max_vertices * j].Cost;
+                                VerticesTmp[threadIdx.x + i + max_vertices * j].Cost;
+
                             Vertices[threadIdx.x + i].Source  =
-                                Data[threadIdx.x + i + max_vertices * j].Source;
+                                VerticesTmp[threadIdx.x + i + max_vertices * j].Source;
+
                             Vertices[threadIdx.x + i].Active  = true;
                         }
                     }
@@ -204,13 +210,13 @@ namespace
         size_t      VerticesSize,
         size_t      EdgesSize)
     {
-        __shared__  DATA_T      data    [max_vertices * max_threads];
-        __shared__  VERTEX_T    vertices[max_vertices];
-        __shared__  EDGE_T      edges   [max_edges];
+        __shared__  VERTEX_TMP_T    vertices_tmp[max_vertices * max_threads];
+        __shared__  VERTEX_T        vertices    [max_vertices];
+        __shared__  EDGE_T          edges       [max_edges];
 
         for (int32_t i = 0; i < max_vertices * max_threads; i += max_threads)
         {
-            data[threadIdx.x + i] = { -1.0f, -1 };
+            vertices_tmp[threadIdx.x + i] = { -1.0f, -1 };
         }
 
         load_vertices(vertices, Vertices, VerticesSize);
@@ -219,9 +225,9 @@ namespace
 
         while (is_active(vertices, VerticesSize))
         {
-            calculate_costs(data, vertices, edges, VerticesSize, EdgesSize);
+            calculate_costs(vertices_tmp, vertices, edges, VerticesSize, EdgesSize);
 
-            consolidate_costs(data, vertices, edges, VerticesSize, EdgesSize);
+            consolidate_costs(vertices_tmp, vertices, edges, VerticesSize, EdgesSize);
         }
 
         save_vertices(vertices, Vertices, VerticesSize);
