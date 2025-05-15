@@ -153,24 +153,20 @@ namespace
                     {
                         if (Vertices[threadIdx.x + i].Cost < 0.0f)
                         {
-                            Vertices[threadIdx.x + i].Cost    =
-                                VerticesTmp[threadIdx.x + i + max_vertices * j].Cost;
-
-                            Vertices[threadIdx.x + i].Source  =
-                                VerticesTmp[threadIdx.x + i + max_vertices * j].Source;
-
-                            Vertices[threadIdx.x + i].Active  = true;
+                            Vertices[threadIdx.x + i] = {
+                                VerticesTmp[threadIdx.x + i + max_vertices * j].Source,
+                                true,
+                                VerticesTmp[threadIdx.x + i + max_vertices * j].Cost
+                            };
                         }
                         else if (Vertices[threadIdx.x + i].Cost >
                             VerticesTmp[threadIdx.x + i + max_vertices * j].Cost)
                         {
-                            Vertices[threadIdx.x + i].Cost    =
-                                VerticesTmp[threadIdx.x + i + max_vertices * j].Cost;
-
-                            Vertices[threadIdx.x + i].Source  =
-                                VerticesTmp[threadIdx.x + i + max_vertices * j].Source;
-
-                            Vertices[threadIdx.x + i].Active  = true;
+                            Vertices[threadIdx.x + i] = {
+                                VerticesTmp[threadIdx.x + i + max_vertices * j].Source,
+                                true,
+                                VerticesTmp[threadIdx.x + i + max_vertices * j].Cost
+                            };
                         }
                     }
                 }
