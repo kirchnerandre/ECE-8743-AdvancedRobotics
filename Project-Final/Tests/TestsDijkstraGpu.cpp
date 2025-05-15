@@ -6,13 +6,22 @@
 
 namespace
 {
-    bool compare_paths(VERTEX_T* VerticesA, VERTEX_T* VerticesB)
+    bool compare_paths(VERTEX_T* VerticesA, VERTEX_T* VerticesB, size_t VerticesSize)
     {
+        for (size_t i = 0u; i < VerticesSize; i++)
+        {
+            if (VerticesA->Source != VerticesB->Source)
+            {
+                fprintf(stderr, "%s:%d:%s: Invalid vertex\n", __FILE__, __LINE__, __FUNCTION__);
+                return false;
+            }
+        }
+
         return true;
     }
 
 
-    void print_path(VERTEX_T* Vertices, int32_t VertexEnd)
+    void print_path(VERTEX_T* Vertices, size_t VerticesSize, int32_t VertexEnd)
     {
         int32_t source = VertexEnd;
 
@@ -20,6 +29,11 @@ namespace
 
         while (1)
         {
+            if (source >= static_cast<int32_t>(VerticesSize))
+            {
+                break;
+            }
+
             if (source < 0)
             {
                 break;
@@ -38,6 +52,12 @@ namespace
 
     bool test_1()
     {
+        VERTEX_T    expected[]  = {
+            { -1, false,  0.0f },
+            {  0, false, -1.0f },
+            {  0, false, -1.0f },
+            {  0, false, -1.0f } };
+
         VERTEX_T    vertices[]  = {
             { -1, true,   0.0f },
             { -1, false, -1.0f },
@@ -70,7 +90,13 @@ namespace
             return false;
         }
 
-        print_path(vertices, 3);
+        print_path(vertices, sizeof(vertices) / sizeof(VERTEX_T), 3);
+
+        if (!compare_paths(vertices, expected, sizeof(vertices) / sizeof(VERTEX_T)))
+        {
+            fprintf(stderr, "%s:%d:%s: Invalid path\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
 
         return true;
     }
@@ -78,6 +104,17 @@ namespace
 
     bool test_2()
     {
+        VERTEX_T    expected[]  = {
+            { -1, false,  0.0f },
+            {  0, false, -1.0f },
+            {  1, false, -1.0f },
+            {  0, false, -1.0f },
+            {  0, false, -1.0f },
+            {  4, false, -1.0f },
+            {  3, false, -1.0f },
+            {  4, false, -1.0f },
+            {  4, false, -1.0f } };
+
         VERTEX_T    vertices[]  = {
             { -1, true,   0.0f }, { -1, false, -1.0f }, { -1, false, -1.0f },
             { -1, false, -1.0f }, { -1, false, -1.0f }, { -1, false, -1.0f },
@@ -117,7 +154,13 @@ namespace
             return false;
         }
 
-        print_path(vertices, 7);
+        print_path(vertices, sizeof(vertices) / sizeof(VERTEX_T), 7);
+
+        if (!compare_paths(vertices, expected, sizeof(vertices) / sizeof(VERTEX_T)))
+        {
+            fprintf(stderr, "%s:%d:%s: Invalid path\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
 
         return true;
     }
@@ -125,6 +168,16 @@ namespace
 
     bool test_3()
     {
+        VERTEX_T    expected[]  = {
+            { -1, false,  0.0f }, {  0, false,  0.0f },
+            {  1, false, -1.0f }, {  2, false,  0.0f },
+            {  0, false, -1.0f }, {  0, false,  0.0f },
+            {  5, false, -1.0f }, {  6, false,  0.0f },
+            {  4, false, -1.0f }, {  5, false,  0.0f },
+            {  5, false, -1.0f }, { 10, false,  0.0f },
+            {  8, false, -1.0f }, {  8, false,  0.0f },
+            {  9, false, -1.0f }, { 10, false,  0.0f } };
+
         VERTEX_T    vertices[]  = {
             { -1, true,   0.0f }, { -1, false, -1.0f },
             { -1, false, -1.0f }, { -1, false, -1.0f },
@@ -179,7 +232,13 @@ namespace
             return false;
         }
 
-        print_path(vertices, 14);
+        print_path(vertices, sizeof(vertices) / sizeof(VERTEX_T), 14);
+
+        if (!compare_paths(vertices, expected, sizeof(vertices) / sizeof(VERTEX_T)))
+        {
+            fprintf(stderr, "%s:%d:%s: Invalid path\n", __FILE__, __LINE__, __FUNCTION__);
+            return false;
+        }
 
         return true;
     }
