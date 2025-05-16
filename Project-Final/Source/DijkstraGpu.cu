@@ -11,12 +11,6 @@ namespace
     constexpr int32_t max_vertices  = 64;
     constexpr int32_t max_edges     = 1024;
 
-    struct VERTEX_TMP_T
-    {
-        int32_t Previous;
-        float   Cost;
-    };
-
 
     __device__ void save_vertices(
         VERTEX_T*   VerticesShared,
@@ -98,11 +92,11 @@ namespace
 
 
     __device__ void calculate_costs(
-        VERTEX_TMP_T*   VerticesTmp,
-        VERTEX_T*       Vertices,
-        EDGE_T*         Edges,
-        size_t          VerticesSize,
-        size_t          EdgesSize)
+        VERTEX_T*   VerticesTmp,
+        VERTEX_T*   Vertices,
+        EDGE_T*     Edges,
+        size_t      VerticesSize,
+        size_t      EdgesSize)
     {
         for (int32_t i = 0; i < max_edges; i += max_threads)
         {
@@ -112,6 +106,7 @@ namespace
                 {
                     VerticesTmp[Edges[threadIdx.x + i].IndexB + max_vertices * threadIdx.x] = {
                         Edges[threadIdx.x + i].IndexA,
+                        true,
                         Edges[threadIdx.x + i].Cost + Vertices[Edges[threadIdx.x + i].IndexA].Cost
                     };
                 }
@@ -119,6 +114,7 @@ namespace
                 {
                     VerticesTmp[Edges[threadIdx.x + i].IndexA + max_vertices * threadIdx.x] = {
                         Edges[threadIdx.x + i].IndexB,
+                        true,
                         Edges[threadIdx.x + i].Cost + Vertices[Edges[threadIdx.x + i].IndexB].Cost
                     };
                 }
@@ -130,11 +126,11 @@ namespace
 
 
     __device__ void consolidate_costs(
-        VERTEX_TMP_T*   VerticesTmp,
-        VERTEX_T*       Vertices,
-        EDGE_T*         Edges,
-        size_t          VerticesSize,
-        size_t          EdgesSiz)
+        VERTEX_T*   VerticesTmp,
+        VERTEX_T*   Vertices,
+        EDGE_T*     Edges,
+        size_t      VerticesSize,
+        size_t      EdgesSiz)
     {
         for (int32_t i = 0; i < max_vertices; i += max_threads)
         {
@@ -181,13 +177,13 @@ namespace
         size_t      VerticesSize,
         size_t      EdgesSize)
     {
-        __shared__  VERTEX_TMP_T    vertices_tmp[max_vertices * max_threads];
-        __shared__  VERTEX_T        vertices    [max_vertices];
-        __shared__  EDGE_T          edges       [max_edges];
+        __shared__  VERTEX_T    vertices_tmp[max_vertices * max_threads];
+        __shared__  VERTEX_T    vertices    [max_vertices];
+        __shared__  EDGE_T      edges       [max_edges];
 
         for (int32_t i = 0; i < max_vertices * max_threads; i += max_threads)
         {
-            vertices_tmp[threadIdx.x + i] = { -1, -1.0f };
+            vertices_tmp[threadIdx.x + i] = { -1, false, -1.0f };
         }
 
         load_vertices(vertices, Vertices, VerticesSize);
