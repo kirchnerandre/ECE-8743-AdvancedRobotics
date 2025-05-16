@@ -13,8 +13,8 @@ namespace
 
     struct VERTEX_TMP_T
     {
-        float   Cost;
         int32_t Previous;
+        float   Cost;
     };
 
 
@@ -111,15 +111,15 @@ namespace
                 if (Vertices[Edges[threadIdx.x + i].IndexA].Active)
                 {
                     VerticesTmp[Edges[threadIdx.x + i].IndexB + max_vertices * threadIdx.x] = {
-                        Edges[threadIdx.x + i].Cost + Vertices[Edges[threadIdx.x + i].IndexA].Cost,
-                        Edges[threadIdx.x + i].IndexA
+                        Edges[threadIdx.x + i].IndexA,
+                        Edges[threadIdx.x + i].Cost + Vertices[Edges[threadIdx.x + i].IndexA].Cost
                     };
                 }
                 else if (Vertices[Edges[threadIdx.x + i].IndexB].Active)
                 {
                     VerticesTmp[Edges[threadIdx.x + i].IndexA + max_vertices * threadIdx.x] = {
-                        Edges[threadIdx.x + i].Cost + Vertices[Edges[threadIdx.x + i].IndexB].Cost,
-                        Edges[threadIdx.x + i].IndexB
+                        Edges[threadIdx.x + i].IndexB,
+                        Edges[threadIdx.x + i].Cost + Vertices[Edges[threadIdx.x + i].IndexB].Cost
                     };
                 }
             }
@@ -187,7 +187,7 @@ namespace
 
         for (int32_t i = 0; i < max_vertices * max_threads; i += max_threads)
         {
-            vertices_tmp[threadIdx.x + i] = { -1.0f, -1 };
+            vertices_tmp[threadIdx.x + i] = { -1, -1.0f };
         }
 
         load_vertices(vertices, Vertices, VerticesSize);
