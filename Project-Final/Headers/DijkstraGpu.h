@@ -6,7 +6,7 @@
 
 struct VERTEX_T
 {
-    int32_t     Source;
+    int32_t     Previous;
     bool        Active;
     float       Cost;
 };

@@ -10,9 +10,9 @@ namespace
     {
         for (size_t i = 0u; i < VerticesSize; i++)
         {
-            if ((VerticesA[i].Source  != VerticesB[i].Source)
-             || (VerticesA[i].Active  != VerticesB[i].Active)
-             || (VerticesA[i].Cost    != VerticesB[i].Cost))
+            if ((VerticesA[i].Previous  != VerticesB[i].Previous)
+             || (VerticesA[i].Active    != VerticesB[i].Active)
+             || (VerticesA[i].Cost      != VerticesB[i].Cost))
             {
                 fprintf(stderr, "%s:%d:%s: Invalid vertex\n", __FILE__, __LINE__, __FUNCTION__);
                 return false;
@@ -45,7 +45,7 @@ namespace
                 printf(" %2d", source);
             }
 
-            source = Vertices[source].Source;
+            source = Vertices[source].Previous;
         }
 
         printf("\n");
